@@ -1,0 +1,23 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/engagespark-openapi-original.yml
+summary:
+  types:
+  - http
+schemes:
+- name: apiToken
+  type: http
+  scheme: token
+  bearerFormat: token
+  description: |-
+    Token based HTTP authentication.
+
+    Use the header "Authorization". The value must be the word "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+    Access tokens can be retrieved and managed [in your User profile](https://app.engagespark.com/profile/api-tokens).
+
+    Allowed headers:
+
+      - Authorization: Token [PERSONAL_ACCESS_T
+  sources:
+  - openapi/engagespark-openapi-original.yml
