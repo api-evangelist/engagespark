@@ -1,0 +1,578 @@
+openapi: 3.1.0
+info:
+  title: engageSPARK Balance Contacts API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+    url: https://spdx.org/licenses/MIT.html
+  termsOfService: https://www.engagespark.com/terms-of-service/
+  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+
+
+    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+
+    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+servers:
+- url: https://api.engagespark.com
+security:
+- apiToken: []
+tags:
+- name: Contacts
+paths:
+  /v1/organizations/{orgId}/contacts/:
+    get:
+      summary: List all contacts for an organization
+      description: "List all contacts for an organization, with optional filtering and pagination.\n\nYou can filter contacts by:\n  - Search terms (searches names and phone numbers)\n  - Group membership\n  - Full phone number\n  - Local phone number + Country\n  - Custom conditions\n  - Subscription status\n  - No-autodelete setting\n  - WhatsApp Business User ID set\n\n\nUse the `subscriptionstatus` parameter to include subscription status information for a specific campaign. Use the `subscriptionfilter` parameter to filter by subscription status."
+      operationId: listContacts
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/query_page'
+      - $ref: '#/components/parameters/query_size'
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Search term to filter contacts by name or phone number
+        example: john
+      - name: phonenumber
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter by international phone number (E164, with optional leading +). If "region" is given this should be a local phone number.
+        example: '1234567890'
+      - name: region
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Used together with phonenumber, this is the country 2 letter name.
+        example: PH
+      - name: groupid
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Filter by group ID
+        example: 123
+      - name: noautodelete
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Filter by no-autodelete setting
+        example: true
+      - name: whatsappready
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Filter by contacts which have WhatsApp Business User ID set
+        example: true
+      - name: conditions
+        in: query
+        required: false
+        schema:
+          type: string
+        description: JSON string of custom conditions for filtering see schema_condition.yaml
+      - name: subscriptionstatus
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Campaign ID to include subscription status information
+        example: 456
+      - name: subscriptionfilter
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - is
+          - isnot
+          - was
+        description: Filter by subscription status (requires subscriptionstatus parameter)
+        example: is
+      responses:
+        '200':
+          description: List of contacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of contacts matching the filter
+                    example: 250
+                  orgTotal:
+                    type: integer
+                    description: Total number of contacts in the organization
+                    example: 1000
+                  contacts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/schema_contact'
+                    description: Array of contact objects
+                required:
+                - total
+                - orgTotal
+                - contacts
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+    post:
+      summary: Create a new contact in the system
+      description: 'Add a new contact to the system. This will return a contact ID which can be used in other engageSPARK APIs.
+
+
+        Most APIs will create a contact on the fly when you use a new phone number, but creating it explicitly gives you more control over the contact fields (such as "first name").
+
+
+        Exactly one of "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" needs to be set.
+
+
+        Using this API you can create multiple different contacts with the same phone number.'
+      operationId: createContact
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used `phoneNumberCountry` must also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two letter ISO code of the country. Used with the `phoneNumber` option.
+                  example: PH
+                firstName:
+                  type: string
+                  description: First name of the contact.
+                  example: Mary
+                lastName:
+                  type: string
+                  description: Last name of the contact.
+                  example: Sue
+                language:
+                  type: string
+                  description: Language is free-form, you can use any standard or system, or leave it empty. The Language field is used in multi language campaigns to decide which version of a message or call to use.
+                  example: Vietnamese
+                groups:
+                  type: array
+                  items:
+                    oneOf:
+                    - type: integer
+                    - type: string
+                  description: List of group IDs of which this contact will be a member. Values can be either integers or the string version of integers.
+                  example:
+                  - 1
+                  - 3
+                  - 144
+                  - 52
+                customFields:
+                  type: object
+                  description: Custom field values. The keys of the object are the engageSPARK integer ID of the custom field, and the value is a free-form string.
+                  additionalProperties:
+                    type: string
+                  example:
+                    '42': green
+                customFieldsByName:
+                  type: object
+                  description: "An alternative way to set custom fields. It's the same idea as `customFields`, but the keys of the objects are the names of the custom fields. We'll use the existing group ID or create a new one if it doesn't exist.\n- names are compared case in-sensitive (so if you add \"Gender\", it'll re-use an existing column \"gender\").\n- if there are multiple possible matches, then we take the oldest existing custom field.\n- if the same custom field is used in `customFields` and `customFieldsByName`, then the value in customFieldsByName wins.\n- if the same custom field is given multiple times in `customFieldsByName` then it's not defined which one wins (`{\"color\": \"green\", \"COLOR\": \"red\"}`).\n  The custom field color can now be either red or green)."
+                  example:
+                    Favorite color: green
+                noAutodelete:
+                  type: boolean
+                  description: Do not automatically delete this contact if contact autodeletion is enabled for this org. You can still delete it manually.
+      responses:
+        '200':
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_contact'
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/organizations/{orgId}/contacts/{contactId}/:
+    get:
+      summary: Get a single contact by ID
+      description: 'Load a contact with all groups, segments, and custom fields.
+
+
+        Use the `subscriptionstatus` parameter to include subscription status information for a specific campaign.'
+      operationId: getContact
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/contactid'
+      - name: subscriptionstatus
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Campaign ID to include subscription status information
+        example: 456
+      responses:
+        '200':
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_contact'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          description: Contact not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - error
+                - errorCode
+                properties:
+                  error:
+                    type: string
+                    description: Not found.
+                    example: Not found
+                  errorCode:
+                    type: string
+                    description: This is "contact.notfound"
+                    example: contact.notfound
+        '500':
+          $ref: '#/components/responses/error_500'
+    put:
+      summary: Update an existing contact
+      description: Update a contact. Only fields that are set will be updated.
+      operationId: updateContact
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/contactid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                firstName:
+                  type: string
+                  description: First name of the contact.
+                  example: Mary
+                lastName:
+                  type: string
+                  description: Last name of the contact.
+                  example: Sue
+                language:
+                  type: string
+                  description: Language is free form, you can use any standard or system, or leave it empty. The Language field is used in multi language campaigns to decide which version of a message or call to use.
+                  example: Vietnamese
+                groups:
+                  type: array
+                  items:
+                    oneOf:
+                    - type: integer
+                    - type: string
+                  description: List of group IDs of which this contact will be a member. Values can be either integers or the string version of integers.
+                  example:
+                  - 1
+                  - 3
+                  - 144
+                  - 52
+                customFields:
+                  type: object
+                  description: 'Custom field values. The keys of the object are the engageSPARK integer ID of the custom field, and the value is a free form string.
+
+                    Groups which aren''t set aren''t updated. Set value to an empty string to delete the value.'
+                  additionalProperties:
+                    type: string
+                  example:
+                    '42': green
+                customFieldsByName:
+                  type: object
+                  description: An alternative way to set Custom fields. It's the same idea as `customFields`, but the keys of the objects are the names of the custom fields. See the documentation in "Create Contact".
+                  example:
+                    Favorite color: green
+                noAutodelete:
+                  type: boolean
+                  description: Do not automatically delete this contact if contact autodeletion is enabled for this org. You can still delete it manually.
+      responses:
+        '200':
+          description: Contact updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_contact'
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+    delete:
+      summary: Delete a contact from the system
+      description: Delete a contact. Will return a 404 if the contact did not exist.
+      operationId: deleteContact
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/contactid'
+      responses:
+        '200':
+          description: Contact deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Empty JSON reply.
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          $ref: '#/components/responses/error_404'
+        '500':
+          $ref: '#/components/responses/error_500'
+components:
+  responses:
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
+    error_400:
+      description: Problem with the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - error
+            - errorCode
+            properties:
+              error:
+                type: string
+                description: English description of the error. Might change over time.
+                example: Too many failed login attempts
+              errorCode:
+                type: string
+                description: Code specific for the error.
+                example: login.locked
+              context:
+                type: object
+                description: Optional error fields specific for the errorCode.
+    error_404:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Not found.
+                example: Not found
+  parameters:
+    contactid:
+      name: contactId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the contact.
+
+        You get this ID when creating a contact.'
+    query_size:
+      name: size
+      in: query
+      schema:
+        type: integer
+      description: The requested number of items on a page.
+      example: 10
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+    query_page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number to retrieve.
+      example: 2
+  schemas:
+    schema_contact:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique engageSPARK ID of the contact.
+          example: 12345
+        fullPhoneNumber:
+          type: string
+          description: International phone number of the contact, without leading "+".
+          example: '631234567890'
+        firstName:
+          type: string
+          description: First name of the contact.
+          example: Mary
+        lastName:
+          type: string
+          description: Last name of the contact.
+          example: Sue
+        language:
+          type: string
+          description: Language of the contact.
+          example: Vietnamese
+        groups:
+          type: array
+          items:
+            type: integer
+          description: Group IDs this contact is in. The IDs can be groups or segments.
+          example:
+          - 26599
+          - 26610
+          - 26626
+        customFields:
+          type: object
+          description: All the custom field values set.
+          additionalProperties:
+            type: string
+          example:
+            '120': blue
+            '121': soy beans
+        carrier:
+          type: string
+          description: Name of the carrier.
+          example: Vodafone
+        createdAt:
+          type: string
+          format: date-time
+          description: Time this contact was created.
+          example: '2020-05-28T10:59:45.061156Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last time this contact was updated, either the contact itself, or a custom field, or groups have changed.
+          example: '2020-05-28T10:59:45.061156Z'
+        lastUseAt:
+          type: string
+          format: date-time
+          description: Last time this contact was used.
+          example: '2020-05-28T10:59:45.061156Z'
+        noAutodelete:
+          type: boolean
+          description: If set, this contact will not be deleted by the organization's contact autodelete.
+        withBsuid:
+          type: boolean
+          description: If true, this contact has a whatsapp business user ID set.
+          example: false
+        invalid:
+          type: boolean
+          description: Whether the contact's phone number is invalid
+          example: false
+        subscription:
+          $ref: '#/components/schemas/schema_substatus'
+    schema_substatus:
+      type: object
+      description: Status of a subscription for a contact.
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of subscriptions for this contact.
+          example: 3
+        inProgressCount:
+          type: integer
+          description: Number of subscriptions currently in progress.
+          example: 1
+        doneCount:
+          type: integer
+          description: Number of subscriptions that have completed.
+          example: 2
+        unsubbedCount:
+          type: integer
+          description: Number of subscriptions that have been unsubscribed
+          example: 0
+        errorCount:
+          type: integer
+          description: Number of subscriptions that encountered errors.
+          example: 0
+        withFailuresCount:
+          type: integer
+          description: Number of subscriptions that had failures.
+          example: 0
+        activeId:
+          type: integer
+          description: ID of the active subscription, if any.
+          example: 12345
+        lastId:
+          type: integer
+          description: ID of the last subscription processed.
+          example: 12345
+      required:
+      - totalCount
+      - inProgressCount
+      - doneCount
+      - unsubbedCount
+      - errorCount
+      - withFailuresCount
+      - activeId
+  securitySchemes:
+    apiToken:
+      bearerFormat: token
+      description: "Token based HTTP authentication.\n\nUse the header \"Authorization\". The value must be the word \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nAccess tokens can be retrieved and managed [in your User profile](https://app.engagespark.com/profile/api-tokens).\n\nAllowed headers:\n\n  - Authorization: Token [PERSONAL_ACCESS_TOKEN]"
+      type: http
+      scheme: token

@@ -1,0 +1,371 @@
+openapi: 3.1.0
+info:
+  title: engageSPARK Balance Files API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+    url: https://spdx.org/licenses/MIT.html
+  termsOfService: https://www.engagespark.com/terms-of-service/
+  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+
+
+    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+
+    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+servers:
+- url: https://api.engagespark.com
+security:
+- apiToken: []
+tags:
+- name: Files
+paths:
+  /v1/organizations/{orgId}/files/:
+    get:
+      summary: Get all files of an organization
+      description: 'This endpoint returns all saved files data of an organization.
+
+        The files are sorted by their user defined title fields.'
+      operationId: getFileList
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - in: query
+        name: category
+        schema:
+          type: string
+          description: The category of the files to filter by.
+          example: uploads
+        description: Optional category filter for the files.
+      responses:
+        '200':
+          description: The list of saved files of the organization.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/schema_file'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+    post:
+      summary: Upload files to storage
+      description: 'Upload files to our storage system. This uses the basic "file upload" mechanism browsers use (multipart).
+
+        We store the filename (without the path) as the title field in the file record. The returned filename is the unique identifier for the file. It is based on the title to make nice paths.
+
+        You can upload multiple files. If there''s only 1 file this endpoint will return with a 400 error, if there are multiple files in the upload the "results" will have the errors.'
+      operationId: uploadFile
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: category
+        in: query
+        required: true
+        schema:
+          type: string
+        description: The category of the file(s).
+        example: uploads
+      - name: filter
+        in: query
+        schema:
+          type: string
+          enum:
+          - ogg
+          - mp3
+          - mono
+          - norm
+        description: Optionally convert audio files. Don't use this on non-audio files. The file is processed by the sox audio processor.
+        example: mp3
+      - name: video
+        in: query
+        schema:
+          type: boolean
+        description: 'We don''t recode video, if this option is set (any value), we check if the file is compatible with whatsapp, checking against its limitations: - needs to be h264 video - needs to have aac audio - smaller than 16MB - at least a second long
+
+          We also add a thumbnail of the video to the storage system'
+        example: false
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - upload
+              properties:
+                upload:
+                  type: array
+                  description: The file contents to upload. Can be repeated.
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          description: The file was uploaded successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - filename
+                - title
+                - results
+                - files
+                properties:
+                  filename:
+                    type: string
+                    description: The filename of the uploaded file. First file, if there are multiple files uploaded.
+                    example: 01-example.mp3
+                  title:
+                    type: string
+                    description: The title of the uploaded file. First file, if there are multiple files uploaded.
+                    example: 01 - Example file
+                  results:
+                    type: object
+                    description: Names of the originally uploaded files, with either an error or empty string.
+                    additionalProperties:
+                      type: string
+                    example:
+                      listen.mp3: ''
+                  files:
+                    type: array
+                    description: successfully uploaded and stored files
+                    items:
+                      type: object
+                      required:
+                      - filename
+                      - title
+                      - transcript
+                      properties:
+                        filename:
+                          type: string
+                        title:
+                          type: string
+                        transcript:
+                          type: string
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/organizations/{orgId}/files/{filename}:
+    get:
+      summary: Download a file by filename
+      description: This endpoint provides the raw file referenced by its unique file name for download.
+      operationId: downloadFile
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_filename'
+      responses:
+        '200':
+          description: The raw file data.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          $ref: '#/components/responses/error_404'
+        '500':
+          $ref: '#/components/responses/error_500'
+    post:
+      summary: Update a file metadata
+      description: Update a file. Only the given keys are updated. Category and Title are read-only and cannot be updated.
+      operationId: updateFile
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_filename'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transcript:
+                  type: string
+                  description: Audio transcript.
+                  example: I like comparing apples and oranges.
+      responses:
+        '200':
+          description: The file was updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                    description: The filename which was passed in.
+                    example: hoppingtunes.mp3
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          $ref: '#/components/responses/error_404'
+        '500':
+          $ref: '#/components/responses/error_500'
+    delete:
+      summary: Delete a file from storage
+      description: This endpoint deletes a file from the organization's storage.
+      operationId: deleteFile
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_filename'
+      responses:
+        '200':
+          description: The file was deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          $ref: '#/components/responses/error_404'
+        '500':
+          $ref: '#/components/responses/error_500'
+components:
+  responses:
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_400:
+      description: Problem with the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - error
+            - errorCode
+            properties:
+              error:
+                type: string
+                description: English description of the error. Might change over time.
+                example: Too many failed login attempts
+              errorCode:
+                type: string
+                description: Code specific for the error.
+                example: login.locked
+              context:
+                type: object
+                description: Optional error fields specific for the errorCode.
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
+    error_404:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Not found.
+                example: Not found
+  parameters:
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+    param_filename:
+      name: filename
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The name and extension of the file.
+      example: report_01.xlsx
+  schemas:
+    schema_file:
+      type: object
+      required:
+      - filename
+      - title
+      - category
+      - transcript
+      - size
+      - sha1
+      - upload
+      - thumb
+      properties:
+        filename:
+          type: string
+          description: The name of the file.
+          example: 01-example.mp3
+        title:
+          type: string
+          description: The title of the file.
+          example: 01 - Example.mp3
+        category:
+          type: string
+          description: The category of the file given on upload.
+          example: uploads
+        transcript:
+          type: string
+          description: Transcript previously set. This field isn't set automatically.
+          example: Lovely weather today.
+        size:
+          type: number
+          description: The size of the file in bytes.
+          example: 123456
+        sha1:
+          type: string
+          description: The SHA1 checksum of the file.
+          example: 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
+        upload:
+          type: string
+          format: date-time
+          description: The date and time when the file was uploaded.
+          example: '2023-05-23T13:45:00Z'
+        thumb:
+          type: boolean
+          description: We automatically generate a thumbnail for the file if the file is a video file and set this property to true, which is available as /thumb/<filename>.
+          example: false
+  securitySchemes:
+    apiToken:
+      bearerFormat: token
+      description: "Token based HTTP authentication.\n\nUse the header \"Authorization\". The value must be the word \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nAccess tokens can be retrieved and managed [in your User profile](https://app.engagespark.com/profile/api-tokens).\n\nAllowed headers:\n\n  - Authorization: Token [PERSONAL_ACCESS_TOKEN]"
+      type: http
+      scheme: token

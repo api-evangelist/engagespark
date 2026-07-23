@@ -1,0 +1,357 @@
+openapi: 3.1.0
+info:
+  title: engageSPARK Balance Campaigns API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+    url: https://spdx.org/licenses/MIT.html
+  termsOfService: https://www.engagespark.com/terms-of-service/
+  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+
+
+    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+
+    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+servers:
+- url: https://api.engagespark.com
+security:
+- apiToken: []
+tags:
+- name: Campaigns
+paths:
+  /v1/organizations/{orgId}/engagements/{campaignId}/subscribe:
+    post:
+      summary: Subscribe a contact to a campaign
+      description: 'Add a contact to a campaign. The campaign must be launched, not stopped, and it must be open to new subscriptions.
+
+
+        Exactly one of "contactId", "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" needs to be set.
+
+
+        This API will return an error if the contact already has an active (`done == false`) subscription. However, a user can have multiple subscriptions with the same campaign over time. You can set the `allowResubscribe` flag to false if you want the request to fail in case the user had or has any subscription to this campain.
+
+
+        By default, the new subscriptions start right away. Use the `delay` field to schedule new subscriptions into the future.'
+      operationId: subscribeContact
+      tags:
+      - Campaigns
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_campaignid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact. If provided, the contact must exist and be part of the organization.
+                  example: '3456789'
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+                allowResubscribe:
+                  anyOf:
+                  - type: boolean
+                  - type: 'null'
+                  description: Should a contact be resubscribed if it has a previous, already finished subscription?
+                  example: false
+                timeZone:
+                  type: string
+                  description: Overrides the timezones used to calculate message times in Drip and Reminder campaigns.
+                  default: ''
+                  example: Asia/Bangkok
+                delay:
+                  $ref: '#/components/schemas/schema_sub_delay'
+                args:
+                  type: object
+                  description: Campaign-specific arguments passed to the campaign.
+                  additionalProperties: true
+                  example: {}
+                contact:
+                  type: object
+                  description: 'Update the contact with the given fields before subscribing it.
+
+
+                    All fields are optional. Fields that are not provided will not be updated.'
+                  $ref: '#/components/schemas/properties_contact'
+      responses:
+        '200':
+          description: Subscription successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runId:
+                    type: integer
+                    description: Unique subscription ID assigned to the contact.
+                  contactId:
+                    type: integer
+                    description: ID of the contact that has been subscribed.
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/organizations/{orgId}/engagements/{campaignId}/unsubscribe:
+    post:
+      summary: Unsubscribe a contact from a campaign
+      description: 'Unsubscribe a single contact from a campaign.
+
+
+        The call will cancel any subscription from the given contact ID, if there is any active subscription. Because this is actually an abort the subscription will be listed as "error" in reports.
+
+
+        It''s fine to call this if there are no, or no active, subscriptions for the contact.'
+      operationId: unsubscribeContact
+      tags:
+      - Campaigns
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_campaignid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - contactId
+              properties:
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact.
+                  example: '3456789'
+      responses:
+        '200':
+          description: Unsubscribe successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runId:
+                    type: integer
+                    description: Subscription ID, if any.
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+components:
+  schemas:
+    properties_contact:
+      properties:
+        firstName:
+          type: string
+          example: Jane
+        lastName:
+          type: string
+          example: Doe
+        language:
+          type: string
+          description: Sets the language field. Used for campaigns that support multiple languages.
+          example: Bangla
+        groups:
+          type: array
+          items:
+            oneOf:
+            - type: integer
+            - type: string
+          description: List of integer group IDs this contact should be added to.
+        customFields:
+          type: object
+          description: 'Update custom fields as identified by their IDs.
+
+
+            Empty values are valid, and will remove the current value. Only fields that are provided are updated.'
+          additionalProperties:
+            type: string
+          example:
+            '120': blue
+            '121': soy beans
+            '123': ''
+        customFieldsByName:
+          type: object
+          description: 'An alterative way to set Custom fields. The keys of the objects are the names of the custom fields. We''ll use the existing group ID, or create a new one if it doesn''t exist.
+
+            Empty values are valid, and will remove the current value. Only fields that are provided are updated.
+
+            - names are compared case in-sensitive (so if you add "Gender", it''ll re-use an existing column "gender").
+
+            - if there are multiple possible matches, then we take the oldest existing custom field.
+
+            - if the same custom field is used in customFields and customFieldsByName, then the value in customFieldsByName wins.
+
+            - if the same custom field is given multiple times in customFieldsByName then it''s not defined which one wins (`{"color": "green", "COLOR": "red"}`. The custom field color can now be either red or green).'
+          example:
+            color: blue
+            produce: soy beans
+            beneficiary ID: ''
+    schema_sub_delay:
+      type: object
+      description: 'Delays the start of the subscription. If omitted, the subscriptions start immediately.
+
+
+        You must always set the `value` field. When using the `day` unit, you can additionally set the `time` and `timezone` fields. When using the `week` unit, you can additionally set the `time`, `timezone`, and `daysOfWeek` fields.
+
+
+        Note that "0 days 9:00" can yield a different result than "1 day 9:00", depending on the current time of day. The former means "the upcoming 9:00" and the latter means "tomorrow''s 9AM". For example, if it''s currently 8:30, then the former means the subscription starts in half an hour, while the latter means that the subscription starts in 24 hours and 30 minutes.'
+      properties:
+        unit:
+          type: string
+          enum:
+          - ''
+          - second
+          - minute
+          - hour
+          - day
+          - week
+          - month
+          - at
+          description: Time unit for the subscription delay.
+          example: week
+        value:
+          type: integer
+          description: The number of units. For example, if you set `unit` to `"minute"`, then a `value` of `5` delays the subscription by five minutes.
+          example: 1
+        dayOfWeek:
+          type: string
+          enum:
+          - monday
+          - tuesday
+          - wednesday
+          - thursday
+          - friday
+          - saturday
+          - sunday
+          description: Legacy version of `daysOfWeek`, see `daysOfWeek`.
+          example: monday
+        daysOfWeek:
+          type: object
+          description: Optional day of the week when the subscription should activate, only relevant for 'week' unit.
+          $ref: '#/components/schemas/properties_daysofweek'
+        time:
+          type: string
+          description: Optional specific time of day when the subscription should activate, required if unit is 'day' or 'week'.
+          example: 09:00
+        timezone:
+          type: string
+          description: Optional timezone for the specified 'time', defaults to UTC if not provided.
+          example: Asia/Manila
+        country:
+          type: string
+          description: Optional two-letter ISO country code, used to determine the timezone if `timezone` is not set.
+          example: PH
+        at:
+          type: string
+          format: date-time
+          description: Specific date and time when the subscription should start, required if unit is 'at'. If set, overrides all other fields.
+          example: '2024-01-15T09:00:00Z'
+        relative:
+          type: string
+          enum:
+          - ''
+          - previous
+          - initial
+          description: Relative to what message in the campaign.
+    properties_daysofweek:
+      properties:
+        monday:
+          type: boolean
+        tuesday:
+          type: boolean
+        wednesday:
+          type: boolean
+        thursday:
+          type: boolean
+        friday:
+          type: boolean
+        saturday:
+          type: boolean
+        sunday:
+          type: boolean
+  parameters:
+    param_campaignid:
+      name: campaignId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the campaign.
+
+        You can find this ID when editing your campaign, or copy it in the actions drop down in the campaigns list.'
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+  responses:
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_400:
+      description: Problem with the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - error
+            - errorCode
+            properties:
+              error:
+                type: string
+                description: English description of the error. Might change over time.
+                example: Too many failed login attempts
+              errorCode:
+                type: string
+                description: Code specific for the error.
+                example: login.locked
+              context:
+                type: object
+                description: Optional error fields specific for the errorCode.
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
+  securitySchemes:
+    apiToken:
+      bearerFormat: token
+      description: "Token based HTTP authentication.\n\nUse the header \"Authorization\". The value must be the word \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nAccess tokens can be retrieved and managed [in your User profile](https://app.engagespark.com/profile/api-tokens).\n\nAllowed headers:\n\n  - Authorization: Token [PERSONAL_ACCESS_TOKEN]"
+      type: http
+      scheme: token

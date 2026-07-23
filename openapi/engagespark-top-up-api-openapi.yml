@@ -1,0 +1,377 @@
+openapi: 3.1.0
+info:
+  title: engageSPARK Balance Top-Up API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+    url: https://spdx.org/licenses/MIT.html
+  termsOfService: https://www.engagespark.com/terms-of-service/
+  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+
+
+    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+
+    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+servers:
+- url: https://api.engagespark.com
+security:
+- apiToken: []
+tags:
+- name: Top-Up
+paths:
+  /v1/organizations/{orgId}/topup/:
+    post:
+      summary: Send airtime top-up to a phone number
+      description: 'With the engageSPARK Airtime top-up API, you can send prepaid airtime to anyone on the fly. In some countries, airtime is known as prepaid phone credit, mobile credit, or load top-up.
+
+
+        We are able to send very specific amounts of airtime per mobile network operator in each country.  For example, we cannot send 25 Philippine pesos of airtime to a mobile phone on the Smart mobile network in the Philippines, but we can send 25 pesos to a mobile phone on the Globe mobile network. The amounts available differ by mobile network operator (telco) and by country.
+
+
+        With these limitations in mind, we wanted to make this API super easy to use. We didn’t want you to worry about which mobile network operator a phone number is on for you to be able to easily send prepaid airtime to that phone number. So, to simplify things, we created our Airtime top-up API with two parameters: the `maxAmount` parameter and the `desiredAmount` parameter.
+
+
+        **maxAmount Parameter**
+
+
+        In the `maxAmount` parameter, you specify the maximum amount you want to send to the phone number.  If that amount is available, we’ll send that amount; if it’s not available, then we’ll send the closest amount available that is smaller than the `maxAmount` you specified.
+
+
+        For example, if you pass a phone number on the Globe network in the Philippines and a `maxAmount` of 25, we’ll send 25 pesos to that phone number because that’s an available amount for mobile phones on the Globe network.  But if you pass a phone number on the Smart network in the Philippines and a maxAmount of 25, we’ll send that phone number 20 pesos of airtime because that’s the closest amount available that is smaller than 25. Please refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/) to see the available amounts.
+
+
+        **desiredAmount Parameter**
+
+
+        The `desiredAmount` parameter, which is optional but recommended, flips the perspective of the API.  By passing a `desiredAmount`, you can specify the top-up amount you prefer to send to the phone number.
+
+
+        If the `desiredAmount` is available for the phone number, then we will send that amount.  If it is not available, then we will send the next amount higher that is available, but no higher than the `maxAmount`.
+
+
+        For example, if you pass a phone number on the Smart network in the Philippines, a `desiredAmount` of 20, and a `maxAmount` of 30, then we’ll send 20 pesos to that phone number because that’s an available amount for mobile phones on the Smart network. But if you pass a phone number on the Globe network in the Philippines with the same `desiredAmount` and `maxAmount` parameters, we’ll send 25 pesos to that phone number because that’s the closest amount available that is greater than or equal to the `desiredAmount` of 20 and less than or equal to the `maxAmount` of 30 for mobile phones on the Globe network. As mentioned above, you can refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/) to see the available amounts.
+
+
+        **Currencies**
+
+
+        For most countries, we are able to send airtime in local currency; in some countries, we can send airtime only in USD. The recipient will receive the airtime in their local currency, but the conversion from USD to the local currency will occur at the time of the transfer, so the received amount may be slightly different each time depending on exchange rates.  Moreover, in countries in which we can send in local currency, there are some circumstances where a slightly higher amount will be sent than what you specify, but you will still be charged what is listed in our pricing table for the amount you specify. Once again, please refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/) to see the currencies and amounts available per telco per country.
+
+
+        **Phone number / Contact**
+
+
+        Exactly one of `contactId`, `fullPhoneNumber`, or `phoneNumber` with `phoneNumberCountry` needs to be set.'
+      operationId: sendOrgTopup
+      tags:
+      - Top-Up
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - maxAmount
+              properties:
+                maxAmount:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: We make the topup closest to this amount (but not over). See the request description for examples and a more in-depth discussion.
+                desiredAmount:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: We try to use the top-up closest to this amount. Optional but recommended. See the request description for examples and a more in-depth discussion.
+                clientRef:
+                  type: string
+                  description: ID we will return in lists of top-ups. It can be anything and does not need to be unique. engageSPARK does not do anything with this.
+                async:
+                  type: boolean
+                  description: If not set or false we will not return until the topup is finished. Since this can take up to 10 minutes this might cause problems with timeouts. It is recommended to set async to true, and then check the result.
+                test:
+                  type: boolean
+                  description: If true we do not do the actual top-up, but we return what we would have done.
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact.
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+      responses:
+        '200':
+          description: OK. All fields look good and we have executed the top-up.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: engageSPARK ID
+                  currency:
+                    type: string
+                    description: The currency we used.
+                  amountSent:
+                    type: number
+                    description: The amount the user got on their phone.
+                  price:
+                    type: number
+                    description: What you got charged.
+                  queued:
+                    type: boolean
+                    description: Always false for status '200', always true for status '202'.
+        '202':
+          description: "Queued.\n\nEither \"async\" was set, or we did not manage to do the top-up right away. The top-up will be retried a few more times for a maximum of 5 hours.\n\nThe exact schedule:\n\n - 1st retry: scheduled 1 minute after the initial request\n\n - 2nd retry: scheduled 2 minutes after the previous request\n\n - 3rd retry: scheduled 5 minutes after the previous request\n\n - 4th retry: scheduled 30 minutes after the previous request\n\n - 5th retry: scheduled 60 minutes after the previous request\n\n - 6th retry: scheduled 120 minutes after the previous request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: engageSPARK ID
+                  currency:
+                    type: string
+                    description: The currency we used.
+                  amountSent:
+                    type: number
+                    description: The amount the user got on their phone.
+                  price:
+                    type: number
+                    description: What you got charged.
+                  queued:
+                    type: boolean
+                    description: Always false for status '200', always true for status '202'.
+        '400':
+          description: Problem with the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error.
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/topups/:
+    get:
+      summary: List Top-Ups for an organization
+      description: 'List Top-Ups.
+
+        The number of results per API call is limited; see "nextPage" and "after" to get more results.
+
+
+        Sorted by newest first.'
+      operationId: getOrgTopupsList
+      tags:
+      - Top-Up
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: after
+        in: query
+        schema:
+          type: string
+        description: See "nextPage" in the response.
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 100
+          maximum: 100
+        description: Maximum number of results per API call.
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: failed
+        in: query
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          - all
+          default: all
+        description: Limit to/exclude failed Top-Ups.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Keyword search in the contact fields.
+        example: Sue
+      - name: startDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Create time of the Top-Up must be >= this timestamp.
+        example: '2020-02-20T20:20:20Z'
+      - name: endDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Create time of the Top-Up must be < this timestamp.
+        example: '2020-02-20T20:20:20Z'
+      responses:
+        '200':
+          description: OK. Here are your top-ups.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topups:
+                    type: array
+                    description: The top-ups
+                    items:
+                      $ref: '#/components/schemas/schema_topup'
+                  hasNextPage:
+                    type: boolean
+                    description: if true there are older top-ups.
+                  nextPage:
+                    type: string
+                    description: repeat the call with this value a "&after=" argument to get the next page.
+                  paged:
+                    type: boolean
+                    description: if true we used ?page and ?size, not ?after. If this is true then .nextPage and .hasNextPage won't be set.
+                required:
+                - topups
+                - paged
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/topups/{topupId}/:
+    get:
+      summary: Get a single Top-Up by ID
+      description: Load a Top-Up previously created.
+      operationId: getOrgTopups
+      tags:
+      - Top-Up
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: topupId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the Top-Up.
+      responses:
+        '200':
+          description: OK. We have the Top-Up.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_topup'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          description: No such Top-Up.
+          $ref: '#/components/responses/error_404'
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      schema:
+        type: string
+      description: Show this page. Starts at 1!
+    size:
+      name: size
+      in: query
+      schema:
+        type: string
+      description: Used when ?page is set. The default and the maximum is 1000.
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+  responses:
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_404:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Not found.
+                example: Not found
+  schemas:
+    schema_topup:
+      type: object
+      properties:
+        id:
+          type: string
+          description: engageSPARK ID
+        done:
+          type: boolean
+          description: If false the Top-Up hasn't been successful yet, but is still being retried.
+        success:
+          type: boolean
+          description: If true we executed the Top-Up successfully. See "error".
+        error:
+          type: string
+          description: Error describing the problem, if any.
+        clientRef:
+          type: string
+          description: As given in the original request.
+        topupCurrency:
+          type: string
+          description: The currency used, e.g. USD.
+        topupReceived:
+          type: number
+          description: The amount the user got on their phone.
+        priceCharged:
+          type: number
+          description: What you got charged.
+        firstName:
+          type: string
+          description: If the user has a contact in the engageSPARK system, this is the first name of that contact.
+        lastName:
+          type: string
+          description: If the user has a contact in the engageSPARK system, this is the last name of that contact.
+  securitySchemes:
+    apiToken:
+      bearerFormat: token
+      description: "Token based HTTP authentication.\n\nUse the header \"Authorization\". The value must be the word \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nAccess tokens can be retrieved and managed [in your User profile](https://app.engagespark.com/profile/api-tokens).\n\nAllowed headers:\n\n  - Authorization: Token [PERSONAL_ACCESS_TOKEN]"
+      type: http
+      scheme: token

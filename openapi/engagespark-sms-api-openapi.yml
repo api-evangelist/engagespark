@@ -1,0 +1,638 @@
+openapi: 3.1.0
+info:
+  title: engageSPARK Balance SMS API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+    url: https://spdx.org/licenses/MIT.html
+  termsOfService: https://www.engagespark.com/terms-of-service/
+  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+
+
+    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+
+    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+servers:
+- url: https://api.engagespark.com
+security:
+- apiToken: []
+tags:
+- name: SMS
+paths:
+  /v1/sms/contact:
+    post:
+      summary: Send an SMS to a contact
+      description: 'Send a single SMS to a contact. If there is no existing contact with the phone number a contact will be created.
+
+
+        Unicode and multi-part SMS are supported. See `message` for details.
+
+
+        Exactly one of "contactId", "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" need to be set.
+
+
+        Retries: The SMS API automatically re-tries failed messages as often as possible within 24 hours by default. To know until when we’ll keep retrying your message, you can refer to the deliveryDeadline of your POST request.
+
+
+        Testing frequency: In many countries, mobile network operators limit the number of SMS you can send to a single number per minute often to 5 SMS/number/minute. If you send more than five SMS to a single number within a minute, some messages may not get through and will be lost.
+
+
+        This is the normal API for sending an SMS.'
+      operationId: sendSmsContact
+      tags:
+      - SMS
+      security:
+      - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - from
+              - message
+              properties:
+                orgId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: ID of the organization. It can be a string or a number. You can find it in your [Organization Profile](https://app.engagespark.com/organization/info).
+                from:
+                  type: string
+                  description: Sender ID. In general these need to be set, unless you use a default one.
+                message:
+                  type: string
+                  description: 'The content of the message. A message can be up to 7 parts long; longer messages will be rejected.
+
+
+                    You can personalize the SMS using the contact''s data, for example the first name. Example: `Hello {{contact.firstName}}`
+
+
+                    In many countries, Unicode characters can be used. However, country-specific GSM 03.38 code pages are generally not supported.
+
+
+                    ⚠️ Please note that when using unicode-characters, the SMS length calculation changes. Read more about [SMS character limits](https://www.engagespark.com/support/sms-character-limit/).'
+                clientDedup:
+                  type: string
+                  description: If not empty; if we have already sent a message with the given value we won't send the message again. This is useful when a POST failed due to network errors.
+                clientPushURL:
+                  type: string
+                  description: Whenever we receive a delivery receipt we POST to this URL.
+                clientRef:
+                  type: string
+                  description: ID we'll return in lists of SMSs. The ID can be anything and doesn't need to be unique. engageSPARK doesn't do anything with this.
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact. If provided, the contact must exist and be part of the organization.
+                fullPhoneNumber:
+                  type: string
+                  description: 'Full phone number including the country code; it may have a leading "+".
+
+
+                    This number needs to have an international dialing code.
+
+
+                    For example, for a number from the Philippines (with the dialing code 63), 639123456789 would be correct, whereas 9123456789 would be missing the dialing code. If you are not sure about the dialing code of the country you want to send calls or SMS to, [check this Wikipedia article](https://en.wikipedia.org/wiki/List_of_country_calling_codes#Ordered_by_code) on dialing codes.'
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two-letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+                to:
+                  type: string
+                  description: Legacy; same as "fullPhoneNumber".
+      responses:
+        '200':
+          description: OK. All fields look good and we've queued the message for delivery.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_sms'
+        '400':
+          description: Problem with the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error.
+        '401':
+          $ref: '#/components/responses/error_401'
+        '402':
+          $ref: '#/components/responses/error_402'
+        '409':
+          description: Request with duplicated "clientDedup" field. This new request was ignored, as the original has been executed before. All the response fields are the same as the "200" response.
+  /v1/sms/phonenumber:
+    post:
+      summary: Send SMS without contact
+      description: 'Single SMS to a phone number without creating or using a contact.
+
+
+        If needed the message will be sent in multiple parts, which should automatically be reassembled on the user''s phone.
+
+
+        Exactly one of "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" need to be set.'
+      operationId: sendSmsPhonenumber
+      tags:
+      - SMS
+      security:
+      - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - from
+              - message
+              properties:
+                orgId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: ID of the organization. It can be a string or a number. You can find it in your [Organization Profile](https://app.engagespark.com/organization/info).
+                from:
+                  type: string
+                  description: Sender ID. In general these need to be set, unless you use a default one.
+                message:
+                  type: string
+                  description: 'The content of the message. A message can be up to 7 parts long; longer messages will be rejected.
+
+
+                    Personalized messages are not supported in this API.
+
+
+                    In many countries, Unicode characters can be used. Country-specific GSM 03.38 code pages, however, are generally not supported.
+
+
+                    ⚠️ Please note that when using unicode-characters, the SMS length calculation changes. Read more about [SMS character limits](https://www.engagespark.com/support/sms-character-limit/).'
+                clientDedup:
+                  type: string
+                  description: If not empty; if we already send a message with the given value we won't send a message again. Useful when a POST failed thanks to network errors.
+                clientPushURL:
+                  type: string
+                  description: Whenever we get a delivery receipt we POST to this URL.
+                clientRef:
+                  type: string
+                  description: ID we'll return in lists of SMSs. Can be anything and doesn't need to be unique. engageSPARK doesn't do anything with this.
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+                to:
+                  type: string
+                  description: Legacy, same as "fullPhoneNumber".
+      responses:
+        '200':
+          description: OK. All fields look good and we've queued the message for delivery.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_sms'
+        '400':
+          description: Problem with the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error.
+        '401':
+          $ref: '#/components/responses/error_401'
+        '402':
+          $ref: '#/components/responses/error_402'
+        '409':
+          description: Request with duplicated "clientDedup" field. This new request was ignored, as the original has been executed before. All the response fields are the same as the "200" response.
+  /v1/organizations/{orgId}/messages/:
+    get:
+      summary: List SMSs for an organization
+      description: 'List SMSs. Newest first.
+
+
+        The number of results per API call is limited. Either use "nextPage" and "after" to get more results, which work as a cursor, and do not change as new messages come in. Or use "page" and "size", which are classical paging, and might change as new messages come in.'
+      operationId: getSmsList
+      tags:
+      - SMS
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: after
+        in: query
+        schema:
+          type: string
+        description: See "nextPage" in the response.
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 100
+          maximum: 100
+        description: Maximum number of results per API call.
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: dir
+        in: query
+        schema:
+          type: string
+          enum:
+          - inbound
+          - outbound
+          - all
+          default: all
+        description: Limit to only egress, only ingress, or all directions. An empty value is the same as "all".
+      - name: failed
+        in: query
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          - all
+          default: all
+        description: Limit to/exclude failed deliveries. Failed means the message didn't get delivered at all. Delivery Receipts are not taken into account here. An empty value is the same as "all".
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Keyword search in the message, sender, receiver, and contact fields.
+      - name: startDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: The creation time of the message must be >= this timestamp.
+      - name: endDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: The creation time of the message must be < this timestamp.
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    description: The SMSs
+                    items:
+                      $ref: '#/components/schemas/schema_model_sms'
+                  hasNextPage:
+                    type: boolean
+                    description: if true there are older SMSs.
+                  nextPage:
+                    type: string
+                    description: repeat the call with this value a "&after=" argument to get the next page.
+                  paged:
+                    type: boolean
+                    description: if true we used ?page and ?size, not ?after. If this is true then .nextPage and .hasNextPage won't be set.
+                required:
+                - messages
+                - paged
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/messages/{messageId}/:
+    get:
+      summary: Get a single SMS by ID
+      description: Load an SMS, including its delivery status.
+      operationId: getSms
+      tags:
+      - SMS
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the SMS.
+      responses:
+        '200':
+          description: OK. We have the SMS.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_model_sms'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          description: No such SMS.
+          $ref: '#/components/responses/error_404'
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      schema:
+        type: string
+      description: Show this page. Starts at 1!
+    size:
+      name: size
+      in: query
+      schema:
+        type: string
+      description: Used when ?page is set. The default and the maximum is 1000.
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+  responses:
+    error_402:
+      description: Insufficient funds. Please add funds to your organization's balance and repeat the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+                example: insufficient funds
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_400:
+      description: Problem with the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - error
+            - errorCode
+            properties:
+              error:
+                type: string
+                description: English description of the error. Might change over time.
+                example: Too many failed login attempts
+              errorCode:
+                type: string
+                description: Code specific for the error.
+                example: login.locked
+              context:
+                type: object
+                description: Optional error fields specific for the errorCode.
+    error_404:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Not found.
+                example: Not found
+  schemas:
+    schema_sms:
+      type: object
+      required:
+      - messageId
+      - estimateParts
+      - estimateMicro
+      - estimate
+      - deliveryDeadline
+      - to
+      - message
+      - contactId
+      - clientDedup
+      - clientPushURL
+      - clientRef
+      - error
+      - dedupMessageId
+      properties:
+        messageId:
+          type: string
+          description: engageSPARK message ID. Will be unique.
+          example: SMS20240325T122739-500492-1545
+        dedupMessageId:
+          type: string
+          description: The message ID of the original message with the same clientDedup. Only present in error responses when clientDedup conflicts.
+          example: SMS20240325T122739-500492-1545
+        estimateParts:
+          type: integer
+          description: Number of SMSs used to send the message (estimate).
+          example: 2
+        estimateMicro:
+          type: integer
+          description: Price per part, in millionths of a dollar.
+          example: 20000
+        estimate:
+          type: string
+          description: Total estimated cost, in USD, rounded down to cents.
+          example: '0.02'
+        deliveryDeadline:
+          type: string
+          format: date-time
+          description: If there are problems with the telco we'll try to deliver the message until this timestamp.
+          example: '2024-03-26T12:35:15.530548089Z'
+        to:
+          type: string
+          description: Full phone number of the recipient. Including country code, no leading "+".
+          example: '631234567890'
+        message:
+          type: string
+          description: The message as we send it.
+        clientDedup:
+          type: string
+          description: Echo of the "clientDedup" field we received in the request.
+        clientPushURL:
+          type: string
+          description: Echo of the "clientPushURL" field we received in the request.
+        clientRef:
+          type: string
+          description: Echo of the "clientRef" field we received in the request.
+        contactId:
+          type: integer
+          description: ID of the contact.
+          example: 12345
+        error:
+          type: string
+          description: Error message, if any.
+          example: duplicate clientDedup
+        errorCode:
+          type: string
+          description: Error code, if any.
+          example: sms.clientdedup
+    schema_model_sms:
+      type: object
+      properties:
+        id:
+          type: string
+          description: engageSPARK message ID. Will be unique.
+          example: SMS20240325T122739-500492-1545
+        direction:
+          type: string
+          enum:
+          - egress
+          - ingress
+          description: Egress or Ingress message
+          example: egress
+        created:
+          type: string
+          format: date-time
+          description: Time the messages got created. Delivery (if any) will be after this.
+          example: '2024-03-26T12:35:15.530548089Z'
+        sender:
+          type: string
+          description: Sender of the message. Won't be present if the user doesn't have permissions to see this field.
+        recipient:
+          type: string
+          description: Sender of the message. Won't be present if the user doesn't have permissions to see this field.
+        contactId:
+          type: integer
+          description: engageSPARK contact ID.
+          example: 123456
+        pricePerPart:
+          type: integer
+          description: The charged price in micro USD per part of the SMS.
+          example: 20000
+        done:
+          type: boolean
+          description: If not true engageSPARK will try more deliveries still.
+          example: true
+        successPartCount:
+          type: integer
+          description: Number of parts a successful SMS was made of.
+          example: 2
+        successT:
+          type: string
+          format: date-time
+          description: Time the message got sent.
+          example: '2024-03-26T12:35:15.530548089Z'
+        message:
+          type: string
+          description: The message as we (tried to) send. Personalization, if any, will be expanded.
+          example: Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.
+        error:
+          type: string
+          description: 'Description what went wrong when passing the SMS to the telco for delivery.
+
+            This is the error you want to look at, if `deliveredToTelco` is `false`.
+
+            Note that this field can be empty while the Delivery Receipt does indicate a problem.'
+        deliveryError:
+          type: string
+          description: 'Delivery Receipt error, if any.
+
+            This is set, if `deliveredToTelco` is `true` and `deliveredToPhone` is `failed`.
+
+            Examples of possible errors:
+
+            - anti-spam filter
+
+            - blocked
+
+            - contact absent
+
+            - contact absent - permanent
+
+            - contact absent - temporary
+
+            - contact error
+
+            - contact phone issue
+
+            - expired
+
+            - message error
+
+            - network error
+
+            - no route
+
+            - not mobile number
+
+            - opted out of promotional messaging
+
+            - unknown
+
+            - unreachable'
+        deliveredToTelco:
+          type: boolean
+          description: 'Was this SMS successfully delivered to our telco partner?
+
+
+            True if the message is successfully delivered to the telco partner. False if there was an error or while the message is still being delivered.
+
+
+            Note that this is the first step. It does not mean it has reached the handset.'
+        deliveredToPhone:
+          type: string
+          enum:
+          - unknown
+          - confirmed
+          - failed
+          description: 'The Delivery Receipt status of this SMS.
+
+
+            Not all telcos support delivery receipts and they are not always reliable. This varies per telco per country. Contact us to know if delivery receipts are available in your program country, and how reliable they can be expected to be.
+
+
+            - unknown – means we haven’t received a delivery receipt from the telecom. This can happen either when (a) deliveredToTelco is `false` OR (b) deliveredToTelco is `true` but the vendor hasn’t sent us the delivery receipt, yet.
+
+            - confirmed – means we received the delivery receipt from the telecom and it says that, yes, the SMS was delivered.
+
+            - failed – means we received the delivery receipt from the telecom and it says the SMS could not be delivered.'
+        client_ref:
+          type: string
+          description: The value set in the "clientRef" value in the original "send SMS" API call. engageSPARK doesn't do anything with this value, besides returning it here.
+        chargedMicro:
+          type: integer
+          description: The charged price in micro USD in total. In case of refunds this can be 0.
+          example: 40000
+        chargedHuman:
+          type: string
+          description: The charged price in USD as string. Has 2 digits, but 6 if there charge uses amounts smaller than cents.
+          example: '0.40'
+  securitySchemes:
+    apiToken:
+      bearerFormat: token
+      description: "Token based HTTP authentication.\n\nUse the header \"Authorization\". The value must be the word \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nAccess tokens can be retrieved and managed [in your User profile](https://app.engagespark.com/profile/api-tokens).\n\nAllowed headers:\n\n  - Authorization: Token [PERSONAL_ACCESS_TOKEN]"
+      type: http
+      scheme: token

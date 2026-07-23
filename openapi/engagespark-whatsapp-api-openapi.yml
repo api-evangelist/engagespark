@@ -1,0 +1,514 @@
+openapi: 3.1.0
+info:
+  title: engageSPARK Balance WhatsApp API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+    url: https://spdx.org/licenses/MIT.html
+  termsOfService: https://www.engagespark.com/terms-of-service/
+  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+
+
+    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+
+    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+servers:
+- url: https://api.engagespark.com
+security:
+- apiToken: []
+tags:
+- name: WhatsApp
+paths:
+  /v1/whatsapp/contact:
+    post:
+      summary: Send WhatsApp Message
+      description: 'Send a single WhatsApp message to a contact. If there is no existing contact with the phone number a contact will be created.
+
+
+        Exactly one of "contactId", "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" need to be set.
+
+
+        Retries: The WhatsApp API automatically re-tries failed messages as often as possible within 24 hours by default. To know until when we''ll keep retrying your message, you can refer to the deliveryDeadline of the POST response.'
+      operationId: sendWhatsAppContact
+      tags:
+      - WhatsApp
+      security:
+      - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - from
+              - message
+              properties:
+                orgId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: ID of the organization. It can be a string or a number. You can find it in your [Organization Profile](https://app.engagespark.com/organization/info).
+                from:
+                  type: string
+                  description: Sender phone number. Must be a WhatsApp Business Account phone number registered with engageSPARK.
+                message:
+                  type: string
+                  description: 'The content of the message. You can personalize the message using the contact''s data. Example: `Hello {{contact.firstName}}`'
+                image:
+                  type: string
+                  description: local file reference for an image to send.
+                audio:
+                  type: string
+                  description: local file reference for an audio file to send.
+                video:
+                  type: string
+                  description: local file reference for a video file to send.
+                document:
+                  type: string
+                  description: local file reference for a document to send.
+                content:
+                  type: object
+                  description: Structured content for template messages.
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact. If provided, the contact must exist and be part of the organization.
+                fullPhoneNumber:
+                  type: string
+                  description: 'Full phone number including the country code; it may have a leading "+".
+
+                    This number needs to have an international dialing code.
+
+                    For example, for a number from the Philippines (with the dialing code 63), 639123456789 would be correct, whereas 9123456789 would be missing the dialing code.'
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two-letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+      responses:
+        '200':
+          description: OK. All fields look good and we've queued the message for delivery.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messageId:
+                    type: string
+                    description: ID of the sent message.
+                  contactId:
+                    type: integer
+                    description: ID of the contact.
+                  to:
+                    type: string
+                    description: Recipient phone number.
+                  message:
+                    type: string
+                    description: The message content.
+                  content:
+                    type: object
+                    description: Expanded template content.
+                  deliveryDeadline:
+                    type: string
+                    format: date-time
+                    description: Deadline for message delivery attempts.
+        '400':
+          description: Problem with the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error.
+        '401':
+          $ref: '#/components/responses/error_401'
+        '402':
+          $ref: '#/components/responses/error_402'
+  /v1/organizations/{orgId}/whatsapp/:
+    get:
+      summary: List WhatsApp messages for an organization
+      description: 'List WhatsApp messages. Newest first.
+
+
+        The number of results per API call is limited. Either use "nextPage" and "after" to get more results, which work as a cursor, and do not change as new messages come in. Or use "page" and "size", which are classical paging, and might change as new messages come in.'
+      operationId: getWhatsAppList
+      tags:
+      - WhatsApp
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: after
+        in: query
+        schema:
+          type: string
+        description: See "nextPage" in the response.
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 100
+          maximum: 100
+        description: Maximum number of results per API call.
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: dir
+        in: query
+        schema:
+          type: string
+          enum:
+          - inbound
+          - outbound
+          - all
+          default: all
+        description: Limit to only egress, only ingress, or all directions. An empty value is the same as "all".
+      - name: failed
+        in: query
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          - all
+          default: all
+        description: Limit to/exclude failed deliveries. Failed means the message didn't get delivered at all. Delivery Receipts are not taken into account here. An empty value is the same as "all".
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Keyword search in the message, sender, receiver, and contact fields.
+      - name: startDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: The creation time of the message must be >= this timestamp.
+      - name: endDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: The creation time of the message must be < this timestamp.
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    description: The WhatsApp messages
+                    items:
+                      $ref: '#/components/schemas/schema_model_whatsapp'
+                  hasNextPage:
+                    type: boolean
+                    description: if true there are older WhatsApp messages.
+                  nextPage:
+                    type: string
+                    description: repeat the call with this value a "&after=" argument to get the next page.
+                  paged:
+                    type: boolean
+                    description: if true we used ?page and ?size, not ?after. If this is true then .nextPage and .hasNextPage won't be set.
+                required:
+                - messages
+                - paged
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/whatsapp/{messageId}/:
+    get:
+      summary: Get a single WhatsApp message by ID
+      description: Load a WhatsApp message, including its delivery status.
+      operationId: getWhatsApp
+      tags:
+      - WhatsApp
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the WhatsApp message.
+      responses:
+        '200':
+          description: OK. We have the message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_model_whatsapp'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          description: No such message.
+          $ref: '#/components/responses/error_404'
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      schema:
+        type: string
+      description: Show this page. Starts at 1!
+    size:
+      name: size
+      in: query
+      schema:
+        type: string
+      description: Used when ?page is set. The default and the maximum is 1000.
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+  responses:
+    error_402:
+      description: Insufficient funds. Please add funds to your organization's balance and repeat the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+                example: insufficient funds
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_400:
+      description: Problem with the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - error
+            - errorCode
+            properties:
+              error:
+                type: string
+                description: English description of the error. Might change over time.
+                example: Too many failed login attempts
+              errorCode:
+                type: string
+                description: Code specific for the error.
+                example: login.locked
+              context:
+                type: object
+                description: Optional error fields specific for the errorCode.
+    error_404:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Not found.
+                example: Not found
+  schemas:
+    schema_model_whatsapp:
+      type: object
+      properties:
+        id:
+          type: string
+          description: engageSPARK message ID. Will be unique.
+          example: WAIN20250613T114721-763096
+        direction:
+          type: string
+          enum:
+          - egress
+          - ingress
+          description: Egress or Ingress message
+          example: egress
+        created:
+          type: string
+          format: date-time
+          description: Time the messages got created. Delivery (if any) will be after this.
+          example: '2024-03-26T12:35:15.530548089Z'
+        sender:
+          type: string
+          description: Sender of the message. Won't be present if the user doesn't have permissions to see this field.
+        recipient:
+          type: string
+          description: Recipient of the message. Won't be present if the user doesn't have permissions to see this field.
+        contactId:
+          type: integer
+          description: engageSPARK contact ID.
+          example: 123456
+        done:
+          type: boolean
+          description: If not true engageSPARK will try more deliveries still.
+          example: true
+        read:
+          type: boolean
+          example: true
+        readAt:
+          type: string
+          format: date-time
+          description: When we got the "read" confirmation. Only relevant if .read is true.
+          example: '2024-03-26T12:35:15Z'
+        successT:
+          type: string
+          format: date-time
+          description: Time the message got sent.
+          example: '2024-03-26T12:35:15Z'
+        message:
+          type: string
+          description: The message as we (tried to) send. Personalization, if any, will be expanded.
+          example: Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.
+        imageFiles:
+          type: array
+          items:
+            type: string
+          description: Images attached to the message. Load them via /v1/organizations/${ORGID}/files/[filename]
+          example:
+          - cat.jpg
+        audioFiles:
+          type: array
+          items:
+            type: string
+          description: Audio files attached to the message. Load them via /v1/organizations/${ORGID}/files/[filename]
+          example:
+          - cat.mp3
+        videoFiles:
+          type: array
+          items:
+            type: string
+          description: Video files attached to the message. Load them via /v1/organizations/${ORGID}/files/[filename]
+          example:
+          - cat.mov
+        documentFiles:
+          type: array
+          items:
+            type: string
+          description: Documents attached to the message. Load them via /v1/organizations/${ORGID}/files/[filename]
+          example:
+          - cat.pdf
+        fullFilePaths:
+          type: array
+          items:
+            type: string
+          description: Full file paths for all attached files (images, audio, video, documents). These will be the same as the imageFiles, audioFiles, videoFiles, and documentFiles combined, but here they are not just the filename, but the full paths to download the files.
+          example:
+          - /v1/organizations/123/files/cat.jpg
+        location:
+          type: object
+          description: Set if the contact sends their location. Only supported for inbound messages (direction=ingress).
+          properties:
+            latitude:
+              type: string
+              example: '43.586399078369'
+            longitude:
+              type: string
+              example: '1.4468078613281'
+            address:
+              type: string
+              example: 39 Grande Rue Saint-Michel, Toulouse, Occitanie 31400
+            label:
+              type: string
+              example: Tower Of London
+        content:
+          type: object
+          description: object complicated WhatsApp messages.
+        error:
+          type: string
+          description: 'Description what went wrong when passing the SMS to the telco for delivery.
+
+            This is the error you want to look at, if `deliveredToTelco` is `false`.
+
+            Note that this field can be empty while the Delivery Receipt does indicate a problem.'
+        deliveryError:
+          type: string
+          description: 'Delivery Receipt error, if any.
+
+            This is set, if `deliveredToTelco` is `true` and `deliveredToPhone` is `failed`.
+
+            Examples of possible errors:
+
+            - anti-spam filter
+
+            - blocked
+
+            - contact absent
+
+            - contact absent - permanent
+
+            - contact absent - temporary
+
+            - contact error
+
+            - contact phone issue
+
+            - expired
+
+            - message error
+
+            - network error
+
+            - no route
+
+            - not mobile number
+
+            - opted out of promotional messaging
+
+            - unknown
+
+            - unreachable'
+        deliveredToPhone:
+          type: string
+          enum:
+          - unknown
+          - confirmed
+          - failed
+          description: 'The Delivery Receipt status of this SMS.
+
+
+            Not all telcos support delivery receipts and they are not always reliable. This varies per telco per country. Contact us to know if delivery receipts are available in your program country, and how reliable they can be expected to be.
+
+
+            - unknown – means we haven’t received a delivery receipt from the telecom. This can happen either when (a) deliveredToTelco is `false` OR (b) deliveredToTelco is `true` but the vendor hasn’t sent us the delivery receipt, yet.
+
+            - confirmed – means we received the delivery receipt from the telecom and it says that, yes, the SMS was delivered.
+
+            - failed – means we received the delivery receipt from the telecom and it says the SMS could not be delivered.'
+        charged:
+          type: integer
+          description: The charged price in micro USD in total. In case of refunds this can be 0.
+          example: 40000
+  securitySchemes:
+    apiToken:
+      bearerFormat: token
+      description: "Token based HTTP authentication.\n\nUse the header \"Authorization\". The value must be the word \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nAccess tokens can be retrieved and managed [in your User profile](https://app.engagespark.com/profile/api-tokens).\n\nAllowed headers:\n\n  - Authorization: Token [PERSONAL_ACCESS_TOKEN]"
+      type: http
+      scheme: token

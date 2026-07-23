@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: engageSPARK Balance API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+    url: https://spdx.org/licenses/MIT.html
+  termsOfService: https://www.engagespark.com/terms-of-service/
+  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+
+
+    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+
+    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+servers:
+- url: https://api.engagespark.com
+security:
+- apiToken: []
+tags:
+- name: Balance
+paths:
+  /v1/organizations/{orgId}/balance.json:
+    get:
+      summary: Get organization balance
+      description: Get the current balance of the organization.
+      operationId: getOrgBalance
+      tags:
+      - Balance
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      responses:
+        '200':
+          description: Show the balance
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - balance
+                - balanceMicro
+                - balanceHuman
+                - autoRecharge
+                - autoRechargeThreshold
+                - autoRechargeAmount
+                properties:
+                  balance:
+                    type: number
+                    description: Balance in USD, up to 6 digits.
+                    example: 3.141592
+                  balanceMicro:
+                    type: integer
+                    format: int64
+                    description: Balance in micro USD. Divide by 1_000_000 to get dollars.
+                    example: 3141592
+                  balanceHuman:
+                    type: string
+                    description: Balance in USD, rounded (down) to cents, always has 2 digits after the dot.
+                    example: '3.14'
+                  autoRecharge:
+                    type: boolean
+                    description: Autorecharge does a Credit Card transaction if the balance falls under a certain threshold.
+                    example: true
+                  autoRechargeThreshold:
+                    type: number
+                    description: Autorecharge threshold in USD.
+                    example: 50
+                  autoRechargeAmount:
+                    type: number
+                    description: Autorecharge amount in USD.
+                    example: 100
+        '401':
+          $ref: '#/components/responses/error_401'
+components:
+  responses:
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+  parameters:
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+  securitySchemes:
+    apiToken:
+      bearerFormat: token
+      description: "Token based HTTP authentication.\n\nUse the header \"Authorization\". The value must be the word \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nAccess tokens can be retrieved and managed [in your User profile](https://app.engagespark.com/profile/api-tokens).\n\nAllowed headers:\n\n  - Authorization: Token [PERSONAL_ACCESS_TOKEN]"
+      type: http
+      scheme: token
