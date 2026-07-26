@@ -1,0 +1,66 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/engagespark-openapi-original.yml
+entities:
+- name: Organization
+  id_field: orgId
+  description: Top-level account that owns balance, contacts, messages, files, and top-ups.
+- name: Contact
+  id_field: contactId
+  description: A person in an organization address book (phone number, name, groups, custom fields).
+- name: Campaign
+  id_field: campaignId
+  aka: engagement
+  description: A voice/SMS engagement that contacts are subscribed to and unsubscribed from.
+- name: SMS
+  id_field: id
+  description: An outbound or inbound SMS message with delivery, cost, and clientDedup echo fields.
+- name: WhatsApp
+  id_field: id
+  description: A WhatsApp message sent to a contact or listed for an organization.
+- name: TopUp
+  id_field: topupId
+  description: A pre-paid airtime top-up sent to a phone number.
+- name: File
+  id_field: filename
+  description: A file stored under an organization (upload/download/metadata).
+- name: Balance
+  id_field: null
+  description: An organization's current funds balance.
+relationships:
+- from: Organization
+  to: Contact
+  type: has_many
+  via: orgId
+- from: Organization
+  to: SMS
+  type: has_many
+  via: orgId
+- from: Organization
+  to: WhatsApp
+  type: has_many
+  via: orgId
+- from: Organization
+  to: TopUp
+  type: has_many
+  via: orgId
+- from: Organization
+  to: File
+  type: has_many
+  via: orgId
+- from: Organization
+  to: Balance
+  type: has_one
+  via: orgId
+- from: Contact
+  to: Campaign
+  type: has_many
+  via: subscribe/unsubscribe
+- from: SMS
+  to: Contact
+  type: belongs_to
+  via: contactId
+- from: Campaign
+  to: Organization
+  type: belongs_to
+  via: orgId

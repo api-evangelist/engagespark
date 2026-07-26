@@ -1,0 +1,37 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/engagespark-openapi-original.yml
+skills:
+- file: engagespark-send-sms.md
+  name: Send and track an SMS
+  api: openapi/engagespark-openapi-original.yml
+  operations:
+  - sendSmsContact
+  - sendSmsPhonenumber
+  - getSmsList
+  - getSms
+  - getOrgBalance
+- file: engagespark-manage-contacts.md
+  name: Manage contacts
+  api: openapi/engagespark-openapi-original.yml
+  operations:
+  - listContacts
+  - createContact
+  - getContact
+  - updateContact
+  - deleteContact
+- file: engagespark-campaign-subscription.md
+  name: Subscribe a contact to a campaign
+  api: openapi/engagespark-openapi-original.yml
+  operations:
+  - subscribeContact
+  - unsubscribeContact
+  - listContacts
+- file: engagespark-send-airtime-topup.md
+  name: Send an airtime top-up
+  api: openapi/engagespark-openapi-original.yml
+  operations:
+  - getOrgBalance
+  - sendOrgTopup
+  - getOrgTopupsList
+  - getOrgTopups

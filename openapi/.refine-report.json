@@ -1,0 +1,26 @@
+{
+  "provider": "engagespark",
+  "sources": [
+    "engagespark-balance-api-openapi.yml",
+    "engagespark-campaigns-api-openapi.yml",
+    "engagespark-contacts-api-openapi.yml",
+    "engagespark-files-api-openapi.yml",
+    "engagespark-sms-api-openapi.yml",
+    "engagespark-top-up-api-openapi.yml",
+    "engagespark-whatsapp-api-openapi.yml"
+  ],
+  "outputs": [
+    "engagespark-balance-api-openapi.yml",
+    "engagespark-campaigns-api-openapi.yml",
+    "engagespark-contacts-api-openapi.yml",
+    "engagespark-files-api-openapi.yml",
+    "engagespark-sms-api-openapi.yml",
+    "engagespark-top-up-api-openapi.yml",
+    "engagespark-whatsapp-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

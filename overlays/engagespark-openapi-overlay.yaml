@@ -1,0 +1,28 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for engageSPARK API
+  version: 1.0.0
+extends: openapi/engagespark-openapi-original.yml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-07-19'
+      x-apievangelist-artifacts:
+        authentication: authentication/engagespark-authentication.yml
+        conventions: conventions/engagespark-conventions.yml
+        errors: errors/engagespark-problem-types.yml
+        data-model: data-model/engagespark-data-model.yml
+        webhooks: asyncapi/engagespark-webhooks.yml
+        agentic-access: agentic-access/engagespark-agentic-access.yml
+  - target: $.info
+    update:
+      x-idempotency:
+        supported: true
+        mechanism: request-body field
+        field: clientDedup
+        applies_to: [sendSmsContact, sendSmsPhonenumber, sendWhatsAppContact]
+  - target: $.info
+    update:
+      x-pagination:
+        style: page-number
+        params: [page, size]

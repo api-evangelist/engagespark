@@ -1,7 +1,17 @@
 aid: engagespark
 name: engageSPARK
-description: engageSPARK is a company surfaced as a portfolio company of 500-global and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  engageSPARK is a mobile messaging and engagement platform for reaching hard-to-reach
+  populations in low- and middle-income countries at scale. It lets NGOs, researchers,
+  microfinance institutions, and businesses run SMS, automated voice (IVR), WhatsApp,
+  and pre-paid airtime top-up campaigns across 180+ countries without writing code, or
+  programmatically through its HTTP API. The engageSPARK API (api.engagespark.com, v1)
+  exposes token-authenticated endpoints for sending SMS, WhatsApp, and airtime top-ups,
+  managing contacts and organizations, subscribing and unsubscribing contacts to voice
+  and SMS campaigns, reading message and top-up history, checking organization balance,
+  and managing files. Incoming-SMS and campaign-action webhooks let the platform push
+  survey responses and inbound messages into external systems such as Salesforce or
+  Qualtrics.
 url: https://raw.githubusercontent.com/api-evangelist/engagespark/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -9,17 +19,258 @@ x-backed-by:
 - 500-global
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
+image: https://www.engagespark.com/wp-content/uploads/2017/03/engagespark_logo_small.png
 tags:
 - Company
-apis: []
+- Messaging
+- SMS
+- Voice
+- WhatsApp
+- Airtime
+- Communications
+- CPaaS
+- Surveys
+- International Development
+apis:
+- aid: engagespark:engagespark-balance-api
+  name: engageSPARK Balance API
+  description: The Balance API from engageSPARK — 1 operation(s) for balance.
+  humanURL: https://openapi.engagespark.com/
+  baseURL: https://api.engagespark.com
+  tags:
+  - Balance
+  properties:
+  - type: OpenAPI
+    url: openapi/engagespark-balance-api-openapi.yml
+  - type: Authentication
+    url: authentication/engagespark-authentication.yml
+  - type: ErrorCatalog
+    url: errors/engagespark-problem-types.yml
+  - type: Conventions
+    url: conventions/engagespark-conventions.yml
+  - type: Idempotency
+    url: conventions/engagespark-conventions.yml
+  - type: DataModel
+    url: data-model/engagespark-data-model.yml
+  - type: Conformance
+    url: conformance/engagespark-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/engagespark-lifecycle.yml
+  - type: Webhooks
+    url: asyncapi/engagespark-webhooks.yml
+- aid: engagespark:engagespark-campaigns-api
+  name: engageSPARK Campaigns API
+  description: The Campaigns API from engageSPARK — 2 operation(s) for campaigns.
+  humanURL: https://openapi.engagespark.com/
+  baseURL: https://api.engagespark.com
+  tags:
+  - Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/engagespark-campaigns-api-openapi.yml
+  - type: Authentication
+    url: authentication/engagespark-authentication.yml
+  - type: ErrorCatalog
+    url: errors/engagespark-problem-types.yml
+  - type: Conventions
+    url: conventions/engagespark-conventions.yml
+  - type: Idempotency
+    url: conventions/engagespark-conventions.yml
+  - type: DataModel
+    url: data-model/engagespark-data-model.yml
+  - type: Conformance
+    url: conformance/engagespark-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/engagespark-lifecycle.yml
+  - type: Webhooks
+    url: asyncapi/engagespark-webhooks.yml
+- aid: engagespark:engagespark-contacts-api
+  name: engageSPARK Contacts API
+  description: The Contacts API from engageSPARK — 2 operation(s) for contacts.
+  humanURL: https://openapi.engagespark.com/
+  baseURL: https://api.engagespark.com
+  tags:
+  - Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/engagespark-contacts-api-openapi.yml
+  - type: Authentication
+    url: authentication/engagespark-authentication.yml
+  - type: ErrorCatalog
+    url: errors/engagespark-problem-types.yml
+  - type: Conventions
+    url: conventions/engagespark-conventions.yml
+  - type: Idempotency
+    url: conventions/engagespark-conventions.yml
+  - type: DataModel
+    url: data-model/engagespark-data-model.yml
+  - type: Conformance
+    url: conformance/engagespark-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/engagespark-lifecycle.yml
+  - type: Webhooks
+    url: asyncapi/engagespark-webhooks.yml
+- aid: engagespark:engagespark-files-api
+  name: engageSPARK Files API
+  description: The Files API from engageSPARK — 2 operation(s) for files.
+  humanURL: https://openapi.engagespark.com/
+  baseURL: https://api.engagespark.com
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/engagespark-files-api-openapi.yml
+  - type: Authentication
+    url: authentication/engagespark-authentication.yml
+  - type: ErrorCatalog
+    url: errors/engagespark-problem-types.yml
+  - type: Conventions
+    url: conventions/engagespark-conventions.yml
+  - type: Idempotency
+    url: conventions/engagespark-conventions.yml
+  - type: DataModel
+    url: data-model/engagespark-data-model.yml
+  - type: Conformance
+    url: conformance/engagespark-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/engagespark-lifecycle.yml
+  - type: Webhooks
+    url: asyncapi/engagespark-webhooks.yml
+- aid: engagespark:engagespark-sms-api
+  name: engageSPARK SMS API
+  description: The SMS API from engageSPARK — 4 operation(s) for sms.
+  humanURL: https://openapi.engagespark.com/
+  baseURL: https://api.engagespark.com
+  tags:
+  - SMS
+  properties:
+  - type: OpenAPI
+    url: openapi/engagespark-sms-api-openapi.yml
+  - type: Authentication
+    url: authentication/engagespark-authentication.yml
+  - type: ErrorCatalog
+    url: errors/engagespark-problem-types.yml
+  - type: Conventions
+    url: conventions/engagespark-conventions.yml
+  - type: Idempotency
+    url: conventions/engagespark-conventions.yml
+  - type: DataModel
+    url: data-model/engagespark-data-model.yml
+  - type: Conformance
+    url: conformance/engagespark-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/engagespark-lifecycle.yml
+  - type: Webhooks
+    url: asyncapi/engagespark-webhooks.yml
+- aid: engagespark:engagespark-top-up-api
+  name: engageSPARK Top-Up API
+  description: The Top-Up API from engageSPARK — 3 operation(s) for top-up.
+  humanURL: https://openapi.engagespark.com/
+  baseURL: https://api.engagespark.com
+  tags:
+  - Top-Up
+  properties:
+  - type: OpenAPI
+    url: openapi/engagespark-top-up-api-openapi.yml
+  - type: Authentication
+    url: authentication/engagespark-authentication.yml
+  - type: ErrorCatalog
+    url: errors/engagespark-problem-types.yml
+  - type: Conventions
+    url: conventions/engagespark-conventions.yml
+  - type: Idempotency
+    url: conventions/engagespark-conventions.yml
+  - type: DataModel
+    url: data-model/engagespark-data-model.yml
+  - type: Conformance
+    url: conformance/engagespark-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/engagespark-lifecycle.yml
+  - type: Webhooks
+    url: asyncapi/engagespark-webhooks.yml
+- aid: engagespark:engagespark-whatsapp-api
+  name: engageSPARK WhatsApp API
+  description: The WhatsApp API from engageSPARK — 3 operation(s) for whatsapp.
+  humanURL: https://openapi.engagespark.com/
+  baseURL: https://api.engagespark.com
+  tags:
+  - WhatsApp
+  properties:
+  - type: OpenAPI
+    url: openapi/engagespark-whatsapp-api-openapi.yml
+  - type: Authentication
+    url: authentication/engagespark-authentication.yml
+  - type: ErrorCatalog
+    url: errors/engagespark-problem-types.yml
+  - type: Conventions
+    url: conventions/engagespark-conventions.yml
+  - type: Idempotency
+    url: conventions/engagespark-conventions.yml
+  - type: DataModel
+    url: data-model/engagespark-data-model.yml
+  - type: Conformance
+    url: conformance/engagespark-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/engagespark-lifecycle.yml
+  - type: Webhooks
+    url: asyncapi/engagespark-webhooks.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/engagespark-agentic-access.yml
+- type: DomainSecurity
+  url: security/engagespark-domain-security.yml
 - type: Website
   url: https://engagespark.com
+- type: DeveloperPortal
+  url: https://www.engagespark.com/support/how-can-i-use-your-api/
+- type: Documentation
+  url: https://openapi.engagespark.com/
+- type: APIReference
+  url: https://openapi.engagespark.com/
+- type: GettingStarted
+  url: https://www.engagespark.com/support/getting-started/
+- type: Support
+  url: https://www.engagespark.com/support/
+- type: Blog
+  url: https://www.engagespark.com/blog/
+- type: Pricing
+  url: https://www.engagespark.com/pricing/
+- type: SignUp
+  url: https://app.engagespark.com/register
+- type: Login
+  url: https://app.engagespark.com/login
+- type: TermsOfService
+  url: https://www.engagespark.com/terms-of-service/
+- type: PrivacyPolicy
+  url: https://www.engagespark.com/privacy-policy/
+- type: GitHubOrganization
+  url: https://github.com/engagespark
+- type: LLMsTxt
+  url: llms/engagespark-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

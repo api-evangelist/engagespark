@@ -1,0 +1,79 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: openapi/engagespark-openapi-original.yml
+note: No official hosted engageSPARK MCP server found. Candidate tool list derived one-per-operation from
+  the published OpenAPI.
+server:
+  name: engagespark
+  transport: stdio
+tools:
+- name: getOrgBalance
+  description: Get organization balance
+  source_operation: openapi/engagespark-openapi-original.yml#getOrgBalance
+- name: subscribeContact
+  description: Subscribe a contact to a campaign
+  source_operation: openapi/engagespark-openapi-original.yml#subscribeContact
+- name: unsubscribeContact
+  description: Unsubscribe a contact from a campaign
+  source_operation: openapi/engagespark-openapi-original.yml#unsubscribeContact
+- name: listContacts
+  description: List all contacts for an organization
+  source_operation: openapi/engagespark-openapi-original.yml#listContacts
+- name: createContact
+  description: Create a new contact in the system
+  source_operation: openapi/engagespark-openapi-original.yml#createContact
+- name: getContact
+  description: Get a single contact by ID
+  source_operation: openapi/engagespark-openapi-original.yml#getContact
+- name: updateContact
+  description: Update an existing contact
+  source_operation: openapi/engagespark-openapi-original.yml#updateContact
+- name: deleteContact
+  description: Delete a contact from the system
+  source_operation: openapi/engagespark-openapi-original.yml#deleteContact
+- name: sendSmsContact
+  description: Send an SMS to a contact
+  source_operation: openapi/engagespark-openapi-original.yml#sendSmsContact
+- name: sendSmsPhonenumber
+  description: Send SMS without contact
+  source_operation: openapi/engagespark-openapi-original.yml#sendSmsPhonenumber
+- name: getSmsList
+  description: List SMSs for an organization
+  source_operation: openapi/engagespark-openapi-original.yml#getSmsList
+- name: getSms
+  description: Get a single SMS by ID
+  source_operation: openapi/engagespark-openapi-original.yml#getSms
+- name: getFileList
+  description: Get all files of an organization
+  source_operation: openapi/engagespark-openapi-original.yml#getFileList
+- name: uploadFile
+  description: Upload files to storage
+  source_operation: openapi/engagespark-openapi-original.yml#uploadFile
+- name: downloadFile
+  description: Download a file by filename
+  source_operation: openapi/engagespark-openapi-original.yml#downloadFile
+- name: updateFile
+  description: Update a file metadata
+  source_operation: openapi/engagespark-openapi-original.yml#updateFile
+- name: deleteFile
+  description: Delete a file from storage
+  source_operation: openapi/engagespark-openapi-original.yml#deleteFile
+- name: sendOrgTopup
+  description: Send airtime top-up to a phone number
+  source_operation: openapi/engagespark-openapi-original.yml#sendOrgTopup
+- name: getOrgTopupsList
+  description: List Top-Ups for an organization
+  source_operation: openapi/engagespark-openapi-original.yml#getOrgTopupsList
+- name: getOrgTopups
+  description: Get a single Top-Up by ID
+  source_operation: openapi/engagespark-openapi-original.yml#getOrgTopups
+- name: sendWhatsAppContact
+  description: Send WhatsApp Message
+  source_operation: openapi/engagespark-openapi-original.yml#sendWhatsAppContact
+- name: getWhatsAppList
+  description: List WhatsApp messages for an organization
+  source_operation: openapi/engagespark-openapi-original.yml#getWhatsAppList
+- name: getWhatsApp
+  description: Get a single WhatsApp message by ID
+  source_operation: openapi/engagespark-openapi-original.yml#getWhatsApp

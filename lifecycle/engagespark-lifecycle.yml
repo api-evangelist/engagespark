@@ -1,0 +1,15 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/engagespark-openapi-original.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  docs: https://openapi.engagespark.com/
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No public deprecation/Sunset policy documented; no operations marked deprecated in the OpenAPI.
+status_page: null
+sla:
+  url: null
+deprecated_operations: []

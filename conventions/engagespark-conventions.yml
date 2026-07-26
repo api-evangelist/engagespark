@@ -1,0 +1,52 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/engagespark-openapi-original.yml
+docs: https://openapi.engagespark.com/
+authentication:
+  style: http-token
+  header: Authorization
+  format: Token <personal_access_token>
+  note: The literal word "Token" must prefix the personal access token.
+  ref: authentication/engagespark-authentication.yml
+idempotency:
+  supported: true
+  mechanism: request-body field
+  field: clientDedup
+  applies_to:
+  - sendSmsContact
+  - sendSmsPhonenumber
+  - sendWhatsAppContact
+  behavior: If a send request carries a clientDedup value already seen, the message is not sent again;
+    the API returns 409 and the same response fields as the original 200. Intended for safe retries after
+    network errors.
+  retention: not documented
+  echo_field: client_ref (echoed on the SMS resource)
+pagination:
+  style: page-number
+  params:
+  - page
+  - size
+  notes: page starts at 1; size sets items per page (with a documented maximum).
+  applies_to:
+  - listContacts
+  - getSmsList
+  - getFileList
+  - getOrgTopupsList
+  - getWhatsAppList
+error_envelope:
+  media_type: application/json
+  ref: errors/engagespark-problem-types.yml
+  special: 402 signals insufficient balance; 409 signals a de-duplicated request.
+identifiers:
+  organization: orgId (path)
+  campaign: campaignId
+  contact: contactId
+  message: messageId
+  topup: topupId
+  file: filename
+rate_limiting:
+  signaled: false
+  note: No rate-limit headers documented in the OpenAPI.
+versioning:
+  ref: lifecycle/engagespark-lifecycle.yml
+  scheme: uri-path v1

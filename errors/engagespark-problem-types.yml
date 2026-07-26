@@ -1,0 +1,102 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/engagespark-openapi-original.yml
+format: json
+note: engageSPARK returns errors as application/json (not RFC 9457 problem+json). The 409 response echoes
+  a duplicate clientDedup request and returns the original 200 response fields. The 402 response signals
+  insufficient organization balance.
+envelope:
+  media_type: application/json
+problems:
+- status: 400
+  title: Bad request
+  description: Problem with the request.
+  remediation: Check the request body and parameters against the schema.
+  operations:
+  - createContact
+  - getSmsList
+  - getWhatsAppList
+  - listContacts
+  - sendOrgTopup
+  - sendSmsContact
+  - sendSmsPhonenumber
+  - sendWhatsAppContact
+  - subscribeContact
+  - unsubscribeContact
+  - updateContact
+  - updateFile
+  - uploadFile
+- status: 401
+  title: Unauthorized
+  description: No permission.
+  remediation: 'Provide a valid "Authorization: Token <access_token>" header.'
+  operations:
+  - createContact
+  - deleteContact
+  - deleteFile
+  - downloadFile
+  - getContact
+  - getFileList
+  - getOrgBalance
+  - getOrgTopups
+  - getOrgTopupsList
+  - getSms
+  - getSmsList
+  - getWhatsApp
+  - getWhatsAppList
+  - listContacts
+  - sendOrgTopup
+  - sendSmsContact
+  - sendSmsPhonenumber
+  - sendWhatsAppContact
+  - subscribeContact
+  - unsubscribeContact
+  - updateContact
+  - updateFile
+  - uploadFile
+- status: 402
+  title: Insufficient funds
+  description: Insufficient funds. Please add funds to your organization's balance and repeat the request.
+  remediation: Add funds to your organization's balance and repeat the request.
+  operations:
+  - sendSmsContact
+  - sendSmsPhonenumber
+  - sendWhatsAppContact
+- status: 404
+  title: Not found
+  description: Not found.
+  remediation: Verify the organization, contact, message, or file identifier.
+  operations:
+  - deleteContact
+  - deleteFile
+  - downloadFile
+  - getContact
+  - getOrgTopups
+  - getSms
+  - getWhatsApp
+  - updateFile
+- status: 409
+  title: Duplicate request (clientDedup)
+  description: Duplicate request (clientDedup)
+  remediation: A request with the same clientDedup value already executed; the original response fields
+    apply. Safe to treat as success.
+  operations:
+  - sendSmsContact
+  - sendSmsPhonenumber
+- status: 500
+  title: Internal server error
+  description: Internal server error, something went wrong on the server side. Please contact support.
+  remediation: Transient server error; retry with backoff and contact support if it persists.
+  operations:
+  - createContact
+  - deleteContact
+  - deleteFile
+  - downloadFile
+  - getContact
+  - getFileList
+  - listContacts
+  - subscribeContact
+  - unsubscribeContact
+  - updateContact
+  - updateFile
+  - uploadFile

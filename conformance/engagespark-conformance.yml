@@ -1,0 +1,34 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/engagespark-openapi-original.yml
+standards:
+- id: oauth2
+  conforms: false
+  evidence: no oauth2 securityScheme; API uses a static personal access token
+- id: oidc
+  conforms: false
+- id: http-token-auth
+  conforms: true
+  evidence: 'securityScheme apiToken: http scheme "token" (Authorization: Token <pat>)'
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: error responses use application/json, not application/problem+json
+- id: pagination
+  conforms: true
+  evidence: list endpoints accept page + size query parameters (page-number pagination)
+- id: idempotency
+  conforms: true
+  evidence: SMS/WhatsApp send accept a clientDedup field for request de-duplication; duplicate returns
+    409 with the original response
+- id: openapi-3.1
+  conforms: true
+  evidence: spec is OpenAPI 3.1.0
+- id: rest
+  conforms: true
+  evidence: resource-oriented v1 endpoints over HTTPS with standard verbs
+- id: fhir
+  conforms: false
+- id: fapi
+  conforms: false
+- id: scim
+  conforms: false

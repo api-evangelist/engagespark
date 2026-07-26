@@ -1,0 +1,20 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.engagespark.com/support/how-can-i-use-your-api/
+spec_type: Webhooks
+note: engageSPARK documents outbound webhooks that push inbound messages and campaign/survey responses
+  to a customer-configured URL. No AsyncAPI document is published; detailed payload schemas are not published
+  on the public docs.
+webhooks:
+- name: Receive SMS Webhook
+  trigger: An inbound SMS is received on an engageSPARK number/short code.
+  direction: outbound (engageSPARK -> your server)
+  transport: HTTP POST to a customer-configured URL
+  behavior: Forwards the incoming SMS to your server and can relay your response back to the contact.
+  docs: https://www.engagespark.com/support/how-can-i-use-your-api/
+- name: Campaign Action Webhook
+  trigger: A contact completes a survey/campaign interaction.
+  direction: outbound (engageSPARK -> your server)
+  transport: HTTP POST (JSON) to a customer-configured URL
+  behavior: Posts survey/campaign responses in JSON to your specified URL after the interaction occurs.
+  docs: https://www.engagespark.com/support/how-can-i-use-your-api/

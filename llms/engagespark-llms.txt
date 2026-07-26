@@ -1,0 +1,60 @@
+# SMS, Voice, WhatsApp, and Airtime Campaigns in 200+ Countries: Survey & message hard-to-reach populations – at scale
+
+> Engage hard-to-reach populations globally—remotely and at scale—using WhatsApp, SMS, Voice, and Airtime top ups. No coding required.
+
+You can find engageSPARK's home page here: https://www.engagespark.com/
+
+## Customers engageSPARK is best suited for:
+
+Organization that need to communicate with people in low- or middle-income countries.
+Available channels are SMS, automated voice calls, Meta's WhatsApp, and pre-paid airtime credits.
+
+## Sectors engageSPARK focuses on
+
+- NGOs and humanitarian organizations
+- researchers doing research directly in low- or middle-income countries
+- SMEs in low- and middle-income countries
+
+## Solutions
+
+- [Financial Literacy Communications for NGOs](https://www.engagespark.com/solutions/financial-literacy/)
+- [Rapid Safety Checks During Disasters](https://www.engagespark.com/solutions/safety-checks/)
+- [Reminders & Behavioral Nudges for Microfinance Institutions (MFI)](https://www.engagespark.com/solutions/microfinance/)
+- [WASHmobile with engageSPARK](https://www.engagespark.com/solutions/washmobile/)
+
+## Country-specific pages
+
+engageSPARK is available in 180+ countries and can be used to reach people in 180+ countries, including low-, middle-, and high-income countries.
+Here are a few country-specific pages:
+
+- [Bulk SMS Kenya](https://www.engagespark.com/bulk-sms-kenya/)
+- [SMS Blast Masking Indonesia](https://www.engagespark.com/sms-blast-masking-indonesia/)
+- [Text Blast & Receive SMS Online in the Philippines](https://www.engagespark.com/text-blast-receive-sms-online-philippines/)
+- [The Easiest and Best-Priced SMS Gateway in the Philippines](https://www.engagespark.com/sms-gateway-api-philippines/)
+
+## Products engageSPARK offers
+
+- [AI Chatbots](https://www.engagespark.com/humanitarian-ai-chatbots/)
+- [Automated Voice Call Blasts](https://www.engagespark.com/voice-call-blasts/)
+- [Automated Voice Call Surveys (IVR)](https://www.engagespark.com/ivr-call-surveys/)
+- [SMS Blasts](https://www.engagespark.com/sms-blasts/)
+- [SMS Surveys](https://www.engagespark.com/sms-surveys/)
+- [WhatsApp Surveys](https://www.engagespark.com/whatsapp-surveys/)
+
+## Important pages:
+
+- [5 Reasons Why AI Chatbots for NGOs are Different (From Regular Customer Service Chatbots)](https://www.engagespark.com/blog/5-reasons-ai-chatbots-ngos-different/)
+- [Twilio Alternatives for SMS, Voice Calls, and WhatsApp (for NGOs and Other Humanitarian Organizations)](https://www.engagespark.com/twilio-alternative-sms-voice-calls-whatsapp-airtime-topups/)
+- [Explaining Retrieval-Augmented Generation (RAG) Using the Example of a WASH Chatbot](https://www.engagespark.com/blog/retrieval-augmented-generation-rag-example-wash/)
+- [The Ultimate Guide to WhatsApp Business API for NGOs, Businesses, and Universities](https://www.engagespark.com/blog/the-ultimate-guide-to-whatsapp-business-api-for-ngos-businesses-and-universities/)
+- [Welcome to our “Chatbots for LMICs” series!](https://www.engagespark.com/blog/chatbots-for-lmics-series-intro/)
+- [What Makes WhatsApp Chatbots Powerful - and Where They Struggle](https://www.engagespark.com/blog/whatsapp-chatbots-what-you-need-to-know/)
+
+## Other pages
+
+- [Contact Us](https://www.engagespark.com/contact-us/)
+- [Terms of Service](https://www.engagespark.com/terms-of-service/)
+- [Privacy Policy](https://www.engagespark.com/privacy-policy/)
+
+## engageSPARK sitemap
+- [Sitemap index](https://www.engagespark.com/sitemap_index.xml)

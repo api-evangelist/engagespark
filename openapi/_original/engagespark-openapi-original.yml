@@ -1,0 +1,2662 @@
+openapi: 3.1.0
+info:
+  title: engageSPARK API
+  version: 1.0.0
+  license:
+    name: MIT
+    identifier: MIT
+    url: https://spdx.org/licenses/MIT.html
+  termsOfService: https://www.engagespark.com/terms-of-service/
+  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+
+
+    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens).
+    In the API calls you need to set the header "Authorization" with the value "Token" followed by your
+    token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+
+
+    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/)
+    such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+servers:
+- url: https://api.engagespark.com
+security:
+- apiToken: []
+paths:
+  /v1/organizations/{orgId}/balance.json:
+    get:
+      summary: Get organization balance
+      description: Get the current balance of the organization.
+      operationId: getOrgBalance
+      tags:
+      - Balance
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      responses:
+        '200':
+          description: Show the balance
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - balance
+                - balanceMicro
+                - balanceHuman
+                - autoRecharge
+                - autoRechargeThreshold
+                - autoRechargeAmount
+                properties:
+                  balance:
+                    type: number
+                    description: Balance in USD, up to 6 digits.
+                    example: 3.141592
+                  balanceMicro:
+                    type: integer
+                    format: int64
+                    description: Balance in micro USD. Divide by 1_000_000 to get dollars.
+                    example: 3141592
+                  balanceHuman:
+                    type: string
+                    description: Balance in USD, rounded (down) to cents, always has 2 digits after the
+                      dot.
+                    example: '3.14'
+                  autoRecharge:
+                    type: boolean
+                    description: Autorecharge does a Credit Card transaction if the balance falls under
+                      a certain threshold.
+                    example: true
+                  autoRechargeThreshold:
+                    type: number
+                    description: Autorecharge threshold in USD.
+                    example: 50
+                  autoRechargeAmount:
+                    type: number
+                    description: Autorecharge amount in USD.
+                    example: 100
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/engagements/{campaignId}/subscribe:
+    post:
+      summary: Subscribe a contact to a campaign
+      description: 'Add a contact to a campaign. The campaign must be launched, not stopped, and it must
+        be open to new subscriptions.
+
+
+        Exactly one of "contactId", "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" needs
+        to be set.
+
+
+        This API will return an error if the contact already has an active (`done == false`) subscription.
+        However, a user can have multiple subscriptions with the same campaign over time. You can set
+        the `allowResubscribe` flag to false if you want the request to fail in case the user had or has
+        any subscription to this campain.
+
+
+        By default, the new subscriptions start right away. Use the `delay` field to schedule new subscriptions
+        into the future.'
+      operationId: subscribeContact
+      tags:
+      - Campaigns
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_campaignid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact. If provided, the contact must exist and
+                    be part of the organization.
+                  example: '3456789'
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must
+                    also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+                allowResubscribe:
+                  anyOf:
+                  - type: boolean
+                  - type: 'null'
+                  description: Should a contact be resubscribed if it has a previous, already finished
+                    subscription?
+                  example: false
+                timeZone:
+                  type: string
+                  description: Overrides the timezones used to calculate message times in Drip and Reminder
+                    campaigns.
+                  default: ''
+                  example: Asia/Bangkok
+                delay:
+                  $ref: '#/components/schemas/schema_sub_delay'
+                args:
+                  type: object
+                  description: Campaign-specific arguments passed to the campaign.
+                  additionalProperties: true
+                  example: {}
+                contact:
+                  type: object
+                  description: 'Update the contact with the given fields before subscribing it.
+
+
+                    All fields are optional. Fields that are not provided will not be updated.'
+                  $ref: '#/components/schemas/properties_contact'
+      responses:
+        '200':
+          description: Subscription successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runId:
+                    type: integer
+                    description: Unique subscription ID assigned to the contact.
+                  contactId:
+                    type: integer
+                    description: ID of the contact that has been subscribed.
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/organizations/{orgId}/engagements/{campaignId}/unsubscribe:
+    post:
+      summary: Unsubscribe a contact from a campaign
+      description: 'Unsubscribe a single contact from a campaign.
+
+
+        The call will cancel any subscription from the given contact ID, if there is any active subscription.
+        Because this is actually an abort the subscription will be listed as "error" in reports.
+
+
+        It''s fine to call this if there are no, or no active, subscriptions for the contact.'
+      operationId: unsubscribeContact
+      tags:
+      - Campaigns
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_campaignid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - contactId
+              properties:
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact.
+                  example: '3456789'
+      responses:
+        '200':
+          description: Unsubscribe successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runId:
+                    type: integer
+                    description: Subscription ID, if any.
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/organizations/{orgId}/contacts/:
+    get:
+      summary: List all contacts for an organization
+      description: "List all contacts for an organization, with optional filtering and pagination.\n\n\
+        You can filter contacts by:\n  - Search terms (searches names and phone numbers)\n  - Group membership\n\
+        \  - Full phone number\n  - Local phone number + Country\n  - Custom conditions\n  - Subscription\
+        \ status\n  - No-autodelete setting\n  - WhatsApp Business User ID set\n\n\nUse the `subscriptionstatus`\
+        \ parameter to include subscription status information for a specific campaign. Use the `subscriptionfilter`\
+        \ parameter to filter by subscription status."
+      operationId: listContacts
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/query_page'
+      - $ref: '#/components/parameters/query_size'
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Search term to filter contacts by name or phone number
+        example: john
+      - name: phonenumber
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter by international phone number (E164, with optional leading +). If "region"
+          is given this should be a local phone number.
+        example: '1234567890'
+      - name: region
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Used together with phonenumber, this is the country 2 letter name.
+        example: PH
+      - name: groupid
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Filter by group ID
+        example: 123
+      - name: noautodelete
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Filter by no-autodelete setting
+        example: true
+      - name: whatsappready
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Filter by contacts which have WhatsApp Business User ID set
+        example: true
+      - name: conditions
+        in: query
+        required: false
+        schema:
+          type: string
+        description: JSON string of custom conditions for filtering see schema_condition.yaml
+      - name: subscriptionstatus
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Campaign ID to include subscription status information
+        example: 456
+      - name: subscriptionfilter
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - is
+          - isnot
+          - was
+        description: Filter by subscription status (requires subscriptionstatus parameter)
+        example: is
+      responses:
+        '200':
+          description: List of contacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of contacts matching the filter
+                    example: 250
+                  orgTotal:
+                    type: integer
+                    description: Total number of contacts in the organization
+                    example: 1000
+                  contacts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/schema_contact'
+                    description: Array of contact objects
+                required:
+                - total
+                - orgTotal
+                - contacts
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+    post:
+      summary: Create a new contact in the system
+      description: 'Add a new contact to the system. This will return a contact ID which can be used in
+        other engageSPARK APIs.
+
+
+        Most APIs will create a contact on the fly when you use a new phone number, but creating it explicitly
+        gives you more control over the contact fields (such as "first name").
+
+
+        Exactly one of "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" needs to be set.
+
+
+        Using this API you can create multiple different contacts with the same phone number.'
+      operationId: createContact
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used `phoneNumberCountry`
+                    must also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two letter ISO code of the country. Used with the `phoneNumber` option.
+                  example: PH
+                firstName:
+                  type: string
+                  description: First name of the contact.
+                  example: Mary
+                lastName:
+                  type: string
+                  description: Last name of the contact.
+                  example: Sue
+                language:
+                  type: string
+                  description: Language is free-form, you can use any standard or system, or leave it
+                    empty. The Language field is used in multi language campaigns to decide which version
+                    of a message or call to use.
+                  example: Vietnamese
+                groups:
+                  type: array
+                  items:
+                    oneOf:
+                    - type: integer
+                    - type: string
+                  description: List of group IDs of which this contact will be a member. Values can be
+                    either integers or the string version of integers.
+                  example:
+                  - 1
+                  - 3
+                  - 144
+                  - 52
+                customFields:
+                  type: object
+                  description: Custom field values. The keys of the object are the engageSPARK integer
+                    ID of the custom field, and the value is a free-form string.
+                  additionalProperties:
+                    type: string
+                  example:
+                    '42': green
+                customFieldsByName:
+                  type: object
+                  description: "An alternative way to set custom fields. It's the same idea as `customFields`,\
+                    \ but the keys of the objects are the names of the custom fields. We'll use the existing\
+                    \ group ID or create a new one if it doesn't exist.\n- names are compared case in-sensitive\
+                    \ (so if you add \"Gender\", it'll re-use an existing column \"gender\").\n- if there\
+                    \ are multiple possible matches, then we take the oldest existing custom field.\n\
+                    - if the same custom field is used in `customFields` and `customFieldsByName`, then\
+                    \ the value in customFieldsByName wins.\n- if the same custom field is given multiple\
+                    \ times in `customFieldsByName` then it's not defined which one wins (`{\"color\"\
+                    : \"green\", \"COLOR\": \"red\"}`).\n  The custom field color can now be either red\
+                    \ or green)."
+                  example:
+                    Favorite color: green
+                noAutodelete:
+                  type: boolean
+                  description: Do not automatically delete this contact if contact autodeletion is enabled
+                    for this org. You can still delete it manually.
+      responses:
+        '200':
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_contact'
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/organizations/{orgId}/contacts/{contactId}/:
+    get:
+      summary: Get a single contact by ID
+      description: 'Load a contact with all groups, segments, and custom fields.
+
+
+        Use the `subscriptionstatus` parameter to include subscription status information for a specific
+        campaign.'
+      operationId: getContact
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/contactid'
+      - name: subscriptionstatus
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Campaign ID to include subscription status information
+        example: 456
+      responses:
+        '200':
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_contact'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          description: Contact not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - error
+                - errorCode
+                properties:
+                  error:
+                    type: string
+                    description: Not found.
+                    example: Not found
+                  errorCode:
+                    type: string
+                    description: This is "contact.notfound"
+                    example: contact.notfound
+        '500':
+          $ref: '#/components/responses/error_500'
+    put:
+      summary: Update an existing contact
+      description: Update a contact. Only fields that are set will be updated.
+      operationId: updateContact
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/contactid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                firstName:
+                  type: string
+                  description: First name of the contact.
+                  example: Mary
+                lastName:
+                  type: string
+                  description: Last name of the contact.
+                  example: Sue
+                language:
+                  type: string
+                  description: Language is free form, you can use any standard or system, or leave it
+                    empty. The Language field is used in multi language campaigns to decide which version
+                    of a message or call to use.
+                  example: Vietnamese
+                groups:
+                  type: array
+                  items:
+                    oneOf:
+                    - type: integer
+                    - type: string
+                  description: List of group IDs of which this contact will be a member. Values can be
+                    either integers or the string version of integers.
+                  example:
+                  - 1
+                  - 3
+                  - 144
+                  - 52
+                customFields:
+                  type: object
+                  description: 'Custom field values. The keys of the object are the engageSPARK integer
+                    ID of the custom field, and the value is a free form string.
+
+                    Groups which aren''t set aren''t updated. Set value to an empty string to delete the
+                    value.'
+                  additionalProperties:
+                    type: string
+                  example:
+                    '42': green
+                customFieldsByName:
+                  type: object
+                  description: An alternative way to set Custom fields. It's the same idea as `customFields`,
+                    but the keys of the objects are the names of the custom fields. See the documentation
+                    in "Create Contact".
+                  example:
+                    Favorite color: green
+                noAutodelete:
+                  type: boolean
+                  description: Do not automatically delete this contact if contact autodeletion is enabled
+                    for this org. You can still delete it manually.
+      responses:
+        '200':
+          description: Contact updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_contact'
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+    delete:
+      summary: Delete a contact from the system
+      description: Delete a contact. Will return a 404 if the contact did not exist.
+      operationId: deleteContact
+      tags:
+      - Contacts
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/contactid'
+      responses:
+        '200':
+          description: Contact deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Empty JSON reply.
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          $ref: '#/components/responses/error_404'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/sms/contact:
+    post:
+      summary: Send an SMS to a contact
+      description: 'Send a single SMS to a contact. If there is no existing contact with the phone number
+        a contact will be created.
+
+
+        Unicode and multi-part SMS are supported. See `message` for details.
+
+
+        Exactly one of "contactId", "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" need
+        to be set.
+
+
+        Retries: The SMS API automatically re-tries failed messages as often as possible within 24 hours
+        by default. To know until when we’ll keep retrying your message, you can refer to the deliveryDeadline
+        of your POST request.
+
+
+        Testing frequency: In many countries, mobile network operators limit the number of SMS you can
+        send to a single number per minute often to 5 SMS/number/minute. If you send more than five SMS
+        to a single number within a minute, some messages may not get through and will be lost.
+
+
+        This is the normal API for sending an SMS.'
+      operationId: sendSmsContact
+      tags:
+      - SMS
+      security:
+      - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - from
+              - message
+              properties:
+                orgId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: ID of the organization. It can be a string or a number. You can find it
+                    in your [Organization Profile](https://app.engagespark.com/organization/info).
+                from:
+                  type: string
+                  description: Sender ID. In general these need to be set, unless you use a default one.
+                message:
+                  type: string
+                  description: 'The content of the message. A message can be up to 7 parts long; longer
+                    messages will be rejected.
+
+
+                    You can personalize the SMS using the contact''s data, for example the first name.
+                    Example: `Hello {{contact.firstName}}`
+
+
+                    In many countries, Unicode characters can be used. However, country-specific GSM 03.38
+                    code pages are generally not supported.
+
+
+                    ⚠️ Please note that when using unicode-characters, the SMS length calculation changes.
+                    Read more about [SMS character limits](https://www.engagespark.com/support/sms-character-limit/).'
+                clientDedup:
+                  type: string
+                  description: If not empty; if we have already sent a message with the given value we
+                    won't send the message again. This is useful when a POST failed due to network errors.
+                clientPushURL:
+                  type: string
+                  description: Whenever we receive a delivery receipt we POST to this URL.
+                clientRef:
+                  type: string
+                  description: ID we'll return in lists of SMSs. The ID can be anything and doesn't need
+                    to be unique. engageSPARK doesn't do anything with this.
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact. If provided, the contact must exist and
+                    be part of the organization.
+                fullPhoneNumber:
+                  type: string
+                  description: 'Full phone number including the country code; it may have a leading "+".
+
+
+                    This number needs to have an international dialing code.
+
+
+                    For example, for a number from the Philippines (with the dialing code 63), 639123456789
+                    would be correct, whereas 9123456789 would be missing the dialing code. If you are
+                    not sure about the dialing code of the country you want to send calls or SMS to, [check
+                    this Wikipedia article](https://en.wikipedia.org/wiki/List_of_country_calling_codes#Ordered_by_code)
+                    on dialing codes.'
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must
+                    also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two-letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+                to:
+                  type: string
+                  description: Legacy; same as "fullPhoneNumber".
+      responses:
+        '200':
+          description: OK. All fields look good and we've queued the message for delivery.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_sms'
+        '400':
+          description: Problem with the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error.
+        '401':
+          $ref: '#/components/responses/error_401'
+        '402':
+          $ref: '#/components/responses/error_402'
+        '409':
+          description: Request with duplicated "clientDedup" field. This new request was ignored, as the
+            original has been executed before. All the response fields are the same as the "200" response.
+  /v1/sms/phonenumber:
+    post:
+      summary: Send SMS without contact
+      description: 'Single SMS to a phone number without creating or using a contact.
+
+
+        If needed the message will be sent in multiple parts, which should automatically be reassembled
+        on the user''s phone.
+
+
+        Exactly one of "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" need to be set.'
+      operationId: sendSmsPhonenumber
+      tags:
+      - SMS
+      security:
+      - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - from
+              - message
+              properties:
+                orgId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: ID of the organization. It can be a string or a number. You can find it
+                    in your [Organization Profile](https://app.engagespark.com/organization/info).
+                from:
+                  type: string
+                  description: Sender ID. In general these need to be set, unless you use a default one.
+                message:
+                  type: string
+                  description: 'The content of the message. A message can be up to 7 parts long; longer
+                    messages will be rejected.
+
+
+                    Personalized messages are not supported in this API.
+
+
+                    In many countries, Unicode characters can be used. Country-specific GSM 03.38 code
+                    pages, however, are generally not supported.
+
+
+                    ⚠️ Please note that when using unicode-characters, the SMS length calculation changes.
+                    Read more about [SMS character limits](https://www.engagespark.com/support/sms-character-limit/).'
+                clientDedup:
+                  type: string
+                  description: If not empty; if we already send a message with the given value we won't
+                    send a message again. Useful when a POST failed thanks to network errors.
+                clientPushURL:
+                  type: string
+                  description: Whenever we get a delivery receipt we POST to this URL.
+                clientRef:
+                  type: string
+                  description: ID we'll return in lists of SMSs. Can be anything and doesn't need to be
+                    unique. engageSPARK doesn't do anything with this.
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must
+                    also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+                to:
+                  type: string
+                  description: Legacy, same as "fullPhoneNumber".
+      responses:
+        '200':
+          description: OK. All fields look good and we've queued the message for delivery.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_sms'
+        '400':
+          description: Problem with the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error.
+        '401':
+          $ref: '#/components/responses/error_401'
+        '402':
+          $ref: '#/components/responses/error_402'
+        '409':
+          description: Request with duplicated "clientDedup" field. This new request was ignored, as the
+            original has been executed before. All the response fields are the same as the "200" response.
+  /v1/organizations/{orgId}/messages/:
+    get:
+      summary: List SMSs for an organization
+      description: 'List SMSs. Newest first.
+
+
+        The number of results per API call is limited. Either use "nextPage" and "after" to get more results,
+        which work as a cursor, and do not change as new messages come in. Or use "page" and "size", which
+        are classical paging, and might change as new messages come in.'
+      operationId: getSmsList
+      tags:
+      - SMS
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: after
+        in: query
+        schema:
+          type: string
+        description: See "nextPage" in the response.
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 100
+          maximum: 100
+        description: Maximum number of results per API call.
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: dir
+        in: query
+        schema:
+          type: string
+          enum:
+          - inbound
+          - outbound
+          - all
+          default: all
+        description: Limit to only egress, only ingress, or all directions. An empty value is the same
+          as "all".
+      - name: failed
+        in: query
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          - all
+          default: all
+        description: Limit to/exclude failed deliveries. Failed means the message didn't get delivered
+          at all. Delivery Receipts are not taken into account here. An empty value is the same as "all".
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Keyword search in the message, sender, receiver, and contact fields.
+      - name: startDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: The creation time of the message must be >= this timestamp.
+      - name: endDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: The creation time of the message must be < this timestamp.
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    description: The SMSs
+                    items:
+                      $ref: '#/components/schemas/schema_model_sms'
+                  hasNextPage:
+                    type: boolean
+                    description: if true there are older SMSs.
+                  nextPage:
+                    type: string
+                    description: repeat the call with this value a "&after=" argument to get the next
+                      page.
+                  paged:
+                    type: boolean
+                    description: if true we used ?page and ?size, not ?after. If this is true then .nextPage
+                      and .hasNextPage won't be set.
+                required:
+                - messages
+                - paged
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/messages/{messageId}/:
+    get:
+      summary: Get a single SMS by ID
+      description: Load an SMS, including its delivery status.
+      operationId: getSms
+      tags:
+      - SMS
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the SMS.
+      responses:
+        '200':
+          description: OK. We have the SMS.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_model_sms'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          description: No such SMS.
+          $ref: '#/components/responses/error_404'
+  /v1/organizations/{orgId}/files/:
+    get:
+      summary: Get all files of an organization
+      description: 'This endpoint returns all saved files data of an organization.
+
+        The files are sorted by their user defined title fields.'
+      operationId: getFileList
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - in: query
+        name: category
+        schema:
+          type: string
+          description: The category of the files to filter by.
+          example: uploads
+        description: Optional category filter for the files.
+      responses:
+        '200':
+          description: The list of saved files of the organization.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/schema_file'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+    post:
+      summary: Upload files to storage
+      description: 'Upload files to our storage system. This uses the basic "file upload" mechanism browsers
+        use (multipart).
+
+        We store the filename (without the path) as the title field in the file record. The returned filename
+        is the unique identifier for the file. It is based on the title to make nice paths.
+
+        You can upload multiple files. If there''s only 1 file this endpoint will return with a 400 error,
+        if there are multiple files in the upload the "results" will have the errors.'
+      operationId: uploadFile
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: category
+        in: query
+        required: true
+        schema:
+          type: string
+        description: The category of the file(s).
+        example: uploads
+      - name: filter
+        in: query
+        schema:
+          type: string
+          enum:
+          - ogg
+          - mp3
+          - mono
+          - norm
+        description: Optionally convert audio files. Don't use this on non-audio files. The file is processed
+          by the sox audio processor.
+        example: mp3
+      - name: video
+        in: query
+        schema:
+          type: boolean
+        description: 'We don''t recode video, if this option is set (any value), we check if the file
+          is compatible with whatsapp, checking against its limitations: - needs to be h264 video - needs
+          to have aac audio - smaller than 16MB - at least a second long
+
+          We also add a thumbnail of the video to the storage system'
+        example: false
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - upload
+              properties:
+                upload:
+                  type: array
+                  description: The file contents to upload. Can be repeated.
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          description: The file was uploaded successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - filename
+                - title
+                - results
+                - files
+                properties:
+                  filename:
+                    type: string
+                    description: The filename of the uploaded file. First file, if there are multiple
+                      files uploaded.
+                    example: 01-example.mp3
+                  title:
+                    type: string
+                    description: The title of the uploaded file. First file, if there are multiple files
+                      uploaded.
+                    example: 01 - Example file
+                  results:
+                    type: object
+                    description: Names of the originally uploaded files, with either an error or empty
+                      string.
+                    additionalProperties:
+                      type: string
+                    example:
+                      listen.mp3: ''
+                  files:
+                    type: array
+                    description: successfully uploaded and stored files
+                    items:
+                      type: object
+                      required:
+                      - filename
+                      - title
+                      - transcript
+                      properties:
+                        filename:
+                          type: string
+                        title:
+                          type: string
+                        transcript:
+                          type: string
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/organizations/{orgId}/files/{filename}:
+    get:
+      summary: Download a file by filename
+      description: This endpoint provides the raw file referenced by its unique file name for download.
+      operationId: downloadFile
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_filename'
+      responses:
+        '200':
+          description: The raw file data.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          $ref: '#/components/responses/error_404'
+        '500':
+          $ref: '#/components/responses/error_500'
+    post:
+      summary: Update a file metadata
+      description: Update a file. Only the given keys are updated. Category and Title are read-only and
+        cannot be updated.
+      operationId: updateFile
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_filename'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transcript:
+                  type: string
+                  description: Audio transcript.
+                  example: I like comparing apples and oranges.
+      responses:
+        '200':
+          description: The file was updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                    description: The filename which was passed in.
+                    example: hoppingtunes.mp3
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          $ref: '#/components/responses/error_404'
+        '500':
+          $ref: '#/components/responses/error_500'
+    delete:
+      summary: Delete a file from storage
+      description: This endpoint deletes a file from the organization's storage.
+      operationId: deleteFile
+      tags:
+      - Files
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - $ref: '#/components/parameters/param_filename'
+      responses:
+        '200':
+          description: The file was deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          $ref: '#/components/responses/error_404'
+        '500':
+          $ref: '#/components/responses/error_500'
+  /v1/organizations/{orgId}/topup/:
+    post:
+      summary: Send airtime top-up to a phone number
+      description: 'With the engageSPARK Airtime top-up API, you can send prepaid airtime to anyone on
+        the fly. In some countries, airtime is known as prepaid phone credit, mobile credit, or load top-up.
+
+
+        We are able to send very specific amounts of airtime per mobile network operator in each country.  For
+        example, we cannot send 25 Philippine pesos of airtime to a mobile phone on the Smart mobile network
+        in the Philippines, but we can send 25 pesos to a mobile phone on the Globe mobile network. The
+        amounts available differ by mobile network operator (telco) and by country.
+
+
+        With these limitations in mind, we wanted to make this API super easy to use. We didn’t want you
+        to worry about which mobile network operator a phone number is on for you to be able to easily
+        send prepaid airtime to that phone number. So, to simplify things, we created our Airtime top-up
+        API with two parameters: the `maxAmount` parameter and the `desiredAmount` parameter.
+
+
+        **maxAmount Parameter**
+
+
+        In the `maxAmount` parameter, you specify the maximum amount you want to send to the phone number.  If
+        that amount is available, we’ll send that amount; if it’s not available, then we’ll send the closest
+        amount available that is smaller than the `maxAmount` you specified.
+
+
+        For example, if you pass a phone number on the Globe network in the Philippines and a `maxAmount`
+        of 25, we’ll send 25 pesos to that phone number because that’s an available amount for mobile
+        phones on the Globe network.  But if you pass a phone number on the Smart network in the Philippines
+        and a maxAmount of 25, we’ll send that phone number 20 pesos of airtime because that’s the closest
+        amount available that is smaller than 25. Please refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/)
+        to see the available amounts.
+
+
+        **desiredAmount Parameter**
+
+
+        The `desiredAmount` parameter, which is optional but recommended, flips the perspective of the
+        API.  By passing a `desiredAmount`, you can specify the top-up amount you prefer to send to the
+        phone number.
+
+
+        If the `desiredAmount` is available for the phone number, then we will send that amount.  If it
+        is not available, then we will send the next amount higher that is available, but no higher than
+        the `maxAmount`.
+
+
+        For example, if you pass a phone number on the Smart network in the Philippines, a `desiredAmount`
+        of 20, and a `maxAmount` of 30, then we’ll send 20 pesos to that phone number because that’s an
+        available amount for mobile phones on the Smart network. But if you pass a phone number on the
+        Globe network in the Philippines with the same `desiredAmount` and `maxAmount` parameters, we’ll
+        send 25 pesos to that phone number because that’s the closest amount available that is greater
+        than or equal to the `desiredAmount` of 20 and less than or equal to the `maxAmount` of 30 for
+        mobile phones on the Globe network. As mentioned above, you can refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/)
+        to see the available amounts.
+
+
+        **Currencies**
+
+
+        For most countries, we are able to send airtime in local currency; in some countries, we can send
+        airtime only in USD. The recipient will receive the airtime in their local currency, but the conversion
+        from USD to the local currency will occur at the time of the transfer, so the received amount
+        may be slightly different each time depending on exchange rates.  Moreover, in countries in which
+        we can send in local currency, there are some circumstances where a slightly higher amount will
+        be sent than what you specify, but you will still be charged what is listed in our pricing table
+        for the amount you specify. Once again, please refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/)
+        to see the currencies and amounts available per telco per country.
+
+
+        **Phone number / Contact**
+
+
+        Exactly one of `contactId`, `fullPhoneNumber`, or `phoneNumber` with `phoneNumberCountry` needs
+        to be set.'
+      operationId: sendOrgTopup
+      tags:
+      - Top-Up
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - maxAmount
+              properties:
+                maxAmount:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: We make the topup closest to this amount (but not over). See the request
+                    description for examples and a more in-depth discussion.
+                desiredAmount:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: We try to use the top-up closest to this amount. Optional but recommended.
+                    See the request description for examples and a more in-depth discussion.
+                clientRef:
+                  type: string
+                  description: ID we will return in lists of top-ups. It can be anything and does not
+                    need to be unique. engageSPARK does not do anything with this.
+                async:
+                  type: boolean
+                  description: If not set or false we will not return until the topup is finished. Since
+                    this can take up to 10 minutes this might cause problems with timeouts. It is recommended
+                    to set async to true, and then check the result.
+                test:
+                  type: boolean
+                  description: If true we do not do the actual top-up, but we return what we would have
+                    done.
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact.
+                fullPhoneNumber:
+                  type: string
+                  description: Full phone number including the country code, may have a leading "+".
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must
+                    also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+      responses:
+        '200':
+          description: OK. All fields look good and we have executed the top-up.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: engageSPARK ID
+                  currency:
+                    type: string
+                    description: The currency we used.
+                  amountSent:
+                    type: number
+                    description: The amount the user got on their phone.
+                  price:
+                    type: number
+                    description: What you got charged.
+                  queued:
+                    type: boolean
+                    description: Always false for status '200', always true for status '202'.
+        '202':
+          description: "Queued.\n\nEither \"async\" was set, or we did not manage to do the top-up right\
+            \ away. The top-up will be retried a few more times for a maximum of 5 hours.\n\nThe exact\
+            \ schedule:\n\n - 1st retry: scheduled 1 minute after the initial request\n\n - 2nd retry:\
+            \ scheduled 2 minutes after the previous request\n\n - 3rd retry: scheduled 5 minutes after\
+            \ the previous request\n\n - 4th retry: scheduled 30 minutes after the previous request\n\n\
+            \ - 5th retry: scheduled 60 minutes after the previous request\n\n - 6th retry: scheduled\
+            \ 120 minutes after the previous request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: engageSPARK ID
+                  currency:
+                    type: string
+                    description: The currency we used.
+                  amountSent:
+                    type: number
+                    description: The amount the user got on their phone.
+                  price:
+                    type: number
+                    description: What you got charged.
+                  queued:
+                    type: boolean
+                    description: Always false for status '200', always true for status '202'.
+        '400':
+          description: Problem with the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error.
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/topups/:
+    get:
+      summary: List Top-Ups for an organization
+      description: 'List Top-Ups.
+
+        The number of results per API call is limited; see "nextPage" and "after" to get more results.
+
+
+        Sorted by newest first.'
+      operationId: getOrgTopupsList
+      tags:
+      - Top-Up
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: after
+        in: query
+        schema:
+          type: string
+        description: See "nextPage" in the response.
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 100
+          maximum: 100
+        description: Maximum number of results per API call.
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: failed
+        in: query
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          - all
+          default: all
+        description: Limit to/exclude failed Top-Ups.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Keyword search in the contact fields.
+        example: Sue
+      - name: startDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Create time of the Top-Up must be >= this timestamp.
+        example: '2020-02-20T20:20:20Z'
+      - name: endDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Create time of the Top-Up must be < this timestamp.
+        example: '2020-02-20T20:20:20Z'
+      responses:
+        '200':
+          description: OK. Here are your top-ups.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topups:
+                    type: array
+                    description: The top-ups
+                    items:
+                      $ref: '#/components/schemas/schema_topup'
+                  hasNextPage:
+                    type: boolean
+                    description: if true there are older top-ups.
+                  nextPage:
+                    type: string
+                    description: repeat the call with this value a "&after=" argument to get the next
+                      page.
+                  paged:
+                    type: boolean
+                    description: if true we used ?page and ?size, not ?after. If this is true then .nextPage
+                      and .hasNextPage won't be set.
+                required:
+                - topups
+                - paged
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/topups/{topupId}/:
+    get:
+      summary: Get a single Top-Up by ID
+      description: Load a Top-Up previously created.
+      operationId: getOrgTopups
+      tags:
+      - Top-Up
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: topupId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the Top-Up.
+      responses:
+        '200':
+          description: OK. We have the Top-Up.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_topup'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          description: No such Top-Up.
+          $ref: '#/components/responses/error_404'
+  /v1/whatsapp/contact:
+    post:
+      summary: Send WhatsApp Message
+      description: 'Send a single WhatsApp message to a contact. If there is no existing contact with
+        the phone number a contact will be created.
+
+
+        Exactly one of "contactId", "fullPhoneNumber", or "phoneNumber" with "phoneNumberCountry" need
+        to be set.
+
+
+        Retries: The WhatsApp API automatically re-tries failed messages as often as possible within 24
+        hours by default. To know until when we''ll keep retrying your message, you can refer to the deliveryDeadline
+        of the POST response.'
+      operationId: sendWhatsAppContact
+      tags:
+      - WhatsApp
+      security:
+      - apiToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - orgId
+              - from
+              - message
+              properties:
+                orgId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: ID of the organization. It can be a string or a number. You can find it
+                    in your [Organization Profile](https://app.engagespark.com/organization/info).
+                from:
+                  type: string
+                  description: Sender phone number. Must be a WhatsApp Business Account phone number registered
+                    with engageSPARK.
+                message:
+                  type: string
+                  description: 'The content of the message. You can personalize the message using the
+                    contact''s data. Example: `Hello {{contact.firstName}}`'
+                image:
+                  type: string
+                  description: local file reference for an image to send.
+                audio:
+                  type: string
+                  description: local file reference for an audio file to send.
+                video:
+                  type: string
+                  description: local file reference for a video file to send.
+                document:
+                  type: string
+                  description: local file reference for a document to send.
+                content:
+                  type: object
+                  description: Structured content for template messages.
+                contactId:
+                  oneOf:
+                  - type: integer
+                  - type: string
+                  description: engageSPARK ID of the contact. If provided, the contact must exist and
+                    be part of the organization.
+                fullPhoneNumber:
+                  type: string
+                  description: 'Full phone number including the country code; it may have a leading "+".
+
+                    This number needs to have an international dialing code.
+
+                    For example, for a number from the Philippines (with the dialing code 63), 639123456789
+                    would be correct, whereas 9123456789 would be missing the dialing code.'
+                  example: '631234567890'
+                phoneNumber:
+                  type: string
+                  description: Country part of the phone number. If this is used phoneNumberCountry must
+                    also be set.
+                  example: '1234567890'
+                phoneNumberCountry:
+                  type: string
+                  description: Two-letter ISO code of the country. Used with the "phoneNumber" option.
+                  example: PH
+      responses:
+        '200':
+          description: OK. All fields look good and we've queued the message for delivery.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messageId:
+                    type: string
+                    description: ID of the sent message.
+                  contactId:
+                    type: integer
+                    description: ID of the contact.
+                  to:
+                    type: string
+                    description: Recipient phone number.
+                  message:
+                    type: string
+                    description: The message content.
+                  content:
+                    type: object
+                    description: Expanded template content.
+                  deliveryDeadline:
+                    type: string
+                    format: date-time
+                    description: Deadline for message delivery attempts.
+        '400':
+          description: Problem with the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Description of the error.
+        '401':
+          $ref: '#/components/responses/error_401'
+        '402':
+          $ref: '#/components/responses/error_402'
+  /v1/organizations/{orgId}/whatsapp/:
+    get:
+      summary: List WhatsApp messages for an organization
+      description: 'List WhatsApp messages. Newest first.
+
+
+        The number of results per API call is limited. Either use "nextPage" and "after" to get more results,
+        which work as a cursor, and do not change as new messages come in. Or use "page" and "size", which
+        are classical paging, and might change as new messages come in.'
+      operationId: getWhatsAppList
+      tags:
+      - WhatsApp
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: after
+        in: query
+        schema:
+          type: string
+        description: See "nextPage" in the response.
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 100
+          maximum: 100
+        description: Maximum number of results per API call.
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/size'
+      - name: dir
+        in: query
+        schema:
+          type: string
+          enum:
+          - inbound
+          - outbound
+          - all
+          default: all
+        description: Limit to only egress, only ingress, or all directions. An empty value is the same
+          as "all".
+      - name: failed
+        in: query
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          - all
+          default: all
+        description: Limit to/exclude failed deliveries. Failed means the message didn't get delivered
+          at all. Delivery Receipts are not taken into account here. An empty value is the same as "all".
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Keyword search in the message, sender, receiver, and contact fields.
+      - name: startDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: The creation time of the message must be >= this timestamp.
+      - name: endDate
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: The creation time of the message must be < this timestamp.
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    description: The WhatsApp messages
+                    items:
+                      $ref: '#/components/schemas/schema_model_whatsapp'
+                  hasNextPage:
+                    type: boolean
+                    description: if true there are older WhatsApp messages.
+                  nextPage:
+                    type: string
+                    description: repeat the call with this value a "&after=" argument to get the next
+                      page.
+                  paged:
+                    type: boolean
+                    description: if true we used ?page and ?size, not ?after. If this is true then .nextPage
+                      and .hasNextPage won't be set.
+                required:
+                - messages
+                - paged
+        '400':
+          $ref: '#/components/responses/error_400'
+        '401':
+          $ref: '#/components/responses/error_401'
+  /v1/organizations/{orgId}/whatsapp/{messageId}/:
+    get:
+      summary: Get a single WhatsApp message by ID
+      description: Load a WhatsApp message, including its delivery status.
+      operationId: getWhatsApp
+      tags:
+      - WhatsApp
+      security:
+      - apiToken: []
+      parameters:
+      - $ref: '#/components/parameters/param_orgid'
+      - name: messageId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID of the WhatsApp message.
+      responses:
+        '200':
+          description: OK. We have the message.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_model_whatsapp'
+        '401':
+          $ref: '#/components/responses/error_401'
+        '404':
+          description: No such message.
+          $ref: '#/components/responses/error_404'
+components:
+  securitySchemes:
+    apiToken:
+      bearerFormat: token
+      description: "Token based HTTP authentication.\n\nUse the header \"Authorization\". The value must\
+        \ be the word \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\"\
+        , NOT \"Authorization: aaa111bbb222ccc333\".\n\nAccess tokens can be retrieved and managed [in\
+        \ your User profile](https://app.engagespark.com/profile/api-tokens).\n\nAllowed headers:\n\n\
+        \  - Authorization: Token [PERSONAL_ACCESS_TOKEN]"
+      type: http
+      scheme: token
+  parameters:
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+    param_campaignid:
+      name: campaignId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the campaign.
+
+        You can find this ID when editing your campaign, or copy it in the actions drop down in the campaigns
+        list.'
+    query_page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number to retrieve.
+      example: 2
+    query_size:
+      name: size
+      in: query
+      schema:
+        type: integer
+      description: The requested number of items on a page.
+      example: 10
+    contactid:
+      name: contactId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the contact.
+
+        You get this ID when creating a contact.'
+    page:
+      name: page
+      in: query
+      schema:
+        type: string
+      description: Show this page. Starts at 1!
+    size:
+      name: size
+      in: query
+      schema:
+        type: string
+      description: Used when ?page is set. The default and the maximum is 1000.
+    param_filename:
+      name: filename
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The name and extension of the file.
+      example: report_01.xlsx
+  responses:
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_400:
+      description: Problem with the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - error
+            - errorCode
+            properties:
+              error:
+                type: string
+                description: English description of the error. Might change over time.
+                example: Too many failed login attempts
+              errorCode:
+                type: string
+                description: Code specific for the error.
+                example: login.locked
+              context:
+                type: object
+                description: Optional error fields specific for the errorCode.
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
+    error_404:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Not found.
+                example: Not found
+    error_402:
+      description: Insufficient funds. Please add funds to your organization's balance and repeat the
+        request.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+                example: insufficient funds
+  schemas:
+    properties_daysofweek:
+      properties:
+        monday:
+          type: boolean
+        tuesday:
+          type: boolean
+        wednesday:
+          type: boolean
+        thursday:
+          type: boolean
+        friday:
+          type: boolean
+        saturday:
+          type: boolean
+        sunday:
+          type: boolean
+    schema_sub_delay:
+      type: object
+      description: 'Delays the start of the subscription. If omitted, the subscriptions start immediately.
+
+
+        You must always set the `value` field. When using the `day` unit, you can additionally set the
+        `time` and `timezone` fields. When using the `week` unit, you can additionally set the `time`,
+        `timezone`, and `daysOfWeek` fields.
+
+
+        Note that "0 days 9:00" can yield a different result than "1 day 9:00", depending on the current
+        time of day. The former means "the upcoming 9:00" and the latter means "tomorrow''s 9AM". For
+        example, if it''s currently 8:30, then the former means the subscription starts in half an hour,
+        while the latter means that the subscription starts in 24 hours and 30 minutes.'
+      properties:
+        unit:
+          type: string
+          enum:
+          - ''
+          - second
+          - minute
+          - hour
+          - day
+          - week
+          - month
+          - at
+          description: Time unit for the subscription delay.
+          example: week
+        value:
+          type: integer
+          description: The number of units. For example, if you set `unit` to `"minute"`, then a `value`
+            of `5` delays the subscription by five minutes.
+          example: 1
+        dayOfWeek:
+          type: string
+          enum:
+          - monday
+          - tuesday
+          - wednesday
+          - thursday
+          - friday
+          - saturday
+          - sunday
+          description: Legacy version of `daysOfWeek`, see `daysOfWeek`.
+          example: monday
+        daysOfWeek:
+          type: object
+          description: Optional day of the week when the subscription should activate, only relevant for
+            'week' unit.
+          $ref: '#/components/schemas/properties_daysofweek'
+        time:
+          type: string
+          description: Optional specific time of day when the subscription should activate, required if
+            unit is 'day' or 'week'.
+          example: 09:00
+        timezone:
+          type: string
+          description: Optional timezone for the specified 'time', defaults to UTC if not provided.
+          example: Asia/Manila
+        country:
+          type: string
+          description: Optional two-letter ISO country code, used to determine the timezone if `timezone`
+            is not set.
+          example: PH
+        at:
+          type: string
+          format: date-time
+          description: Specific date and time when the subscription should start, required if unit is
+            'at'. If set, overrides all other fields.
+          example: '2024-01-15T09:00:00Z'
+        relative:
+          type: string
+          enum:
+          - ''
+          - previous
+          - initial
+          description: Relative to what message in the campaign.
+    properties_contact:
+      properties:
+        firstName:
+          type: string
+          example: Jane
+        lastName:
+          type: string
+          example: Doe
+        language:
+          type: string
+          description: Sets the language field. Used for campaigns that support multiple languages.
+          example: Bangla
+        groups:
+          type: array
+          items:
+            oneOf:
+            - type: integer
+            - type: string
+          description: List of integer group IDs this contact should be added to.
+        customFields:
+          type: object
+          description: 'Update custom fields as identified by their IDs.
+
+
+            Empty values are valid, and will remove the current value. Only fields that are provided are
+            updated.'
+          additionalProperties:
+            type: string
+          example:
+            '120': blue
+            '121': soy beans
+            '123': ''
+        customFieldsByName:
+          type: object
+          description: 'An alterative way to set Custom fields. The keys of the objects are the names
+            of the custom fields. We''ll use the existing group ID, or create a new one if it doesn''t
+            exist.
+
+            Empty values are valid, and will remove the current value. Only fields that are provided are
+            updated.
+
+            - names are compared case in-sensitive (so if you add "Gender", it''ll re-use an existing
+            column "gender").
+
+            - if there are multiple possible matches, then we take the oldest existing custom field.
+
+            - if the same custom field is used in customFields and customFieldsByName, then the value
+            in customFieldsByName wins.
+
+            - if the same custom field is given multiple times in customFieldsByName then it''s not defined
+            which one wins (`{"color": "green", "COLOR": "red"}`. The custom field color can now be either
+            red or green).'
+          example:
+            color: blue
+            produce: soy beans
+            beneficiary ID: ''
+    schema_substatus:
+      type: object
+      description: Status of a subscription for a contact.
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of subscriptions for this contact.
+          example: 3
+        inProgressCount:
+          type: integer
+          description: Number of subscriptions currently in progress.
+          example: 1
+        doneCount:
+          type: integer
+          description: Number of subscriptions that have completed.
+          example: 2
+        unsubbedCount:
+          type: integer
+          description: Number of subscriptions that have been unsubscribed
+          example: 0
+        errorCount:
+          type: integer
+          description: Number of subscriptions that encountered errors.
+          example: 0
+        withFailuresCount:
+          type: integer
+          description: Number of subscriptions that had failures.
+          example: 0
+        activeId:
+          type: integer
+          description: ID of the active subscription, if any.
+          example: 12345
+        lastId:
+          type: integer
+          description: ID of the last subscription processed.
+          example: 12345
+      required:
+      - totalCount
+      - inProgressCount
+      - doneCount
+      - unsubbedCount
+      - errorCount
+      - withFailuresCount
+      - activeId
+    schema_contact:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique engageSPARK ID of the contact.
+          example: 12345
+        fullPhoneNumber:
+          type: string
+          description: International phone number of the contact, without leading "+".
+          example: '631234567890'
+        firstName:
+          type: string
+          description: First name of the contact.
+          example: Mary
+        lastName:
+          type: string
+          description: Last name of the contact.
+          example: Sue
+        language:
+          type: string
+          description: Language of the contact.
+          example: Vietnamese
+        groups:
+          type: array
+          items:
+            type: integer
+          description: Group IDs this contact is in. The IDs can be groups or segments.
+          example:
+          - 26599
+          - 26610
+          - 26626
+        customFields:
+          type: object
+          description: All the custom field values set.
+          additionalProperties:
+            type: string
+          example:
+            '120': blue
+            '121': soy beans
+        carrier:
+          type: string
+          description: Name of the carrier.
+          example: Vodafone
+        createdAt:
+          type: string
+          format: date-time
+          description: Time this contact was created.
+          example: '2020-05-28T10:59:45.061156Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last time this contact was updated, either the contact itself, or a custom field,
+            or groups have changed.
+          example: '2020-05-28T10:59:45.061156Z'
+        lastUseAt:
+          type: string
+          format: date-time
+          description: Last time this contact was used.
+          example: '2020-05-28T10:59:45.061156Z'
+        noAutodelete:
+          type: boolean
+          description: If set, this contact will not be deleted by the organization's contact autodelete.
+        withBsuid:
+          type: boolean
+          description: If true, this contact has a whatsapp business user ID set.
+          example: false
+        invalid:
+          type: boolean
+          description: Whether the contact's phone number is invalid
+          example: false
+        subscription:
+          $ref: '#/components/schemas/schema_substatus'
+    schema_sms:
+      type: object
+      required:
+      - messageId
+      - estimateParts
+      - estimateMicro
+      - estimate
+      - deliveryDeadline
+      - to
+      - message
+      - contactId
+      - clientDedup
+      - clientPushURL
+      - clientRef
+      - error
+      - dedupMessageId
+      properties:
+        messageId:
+          type: string
+          description: engageSPARK message ID. Will be unique.
+          example: SMS20240325T122739-500492-1545
+        dedupMessageId:
+          type: string
+          description: The message ID of the original message with the same clientDedup. Only present
+            in error responses when clientDedup conflicts.
+          example: SMS20240325T122739-500492-1545
+        estimateParts:
+          type: integer
+          description: Number of SMSs used to send the message (estimate).
+          example: 2
+        estimateMicro:
+          type: integer
+          description: Price per part, in millionths of a dollar.
+          example: 20000
+        estimate:
+          type: string
+          description: Total estimated cost, in USD, rounded down to cents.
+          example: '0.02'
+        deliveryDeadline:
+          type: string
+          format: date-time
+          description: If there are problems with the telco we'll try to deliver the message until this
+            timestamp.
+          example: '2024-03-26T12:35:15.530548089Z'
+        to:
+          type: string
+          description: Full phone number of the recipient. Including country code, no leading "+".
+          example: '631234567890'
+        message:
+          type: string
+          description: The message as we send it.
+        clientDedup:
+          type: string
+          description: Echo of the "clientDedup" field we received in the request.
+        clientPushURL:
+          type: string
+          description: Echo of the "clientPushURL" field we received in the request.
+        clientRef:
+          type: string
+          description: Echo of the "clientRef" field we received in the request.
+        contactId:
+          type: integer
+          description: ID of the contact.
+          example: 12345
+        error:
+          type: string
+          description: Error message, if any.
+          example: duplicate clientDedup
+        errorCode:
+          type: string
+          description: Error code, if any.
+          example: sms.clientdedup
+    schema_model_sms:
+      type: object
+      properties:
+        id:
+          type: string
+          description: engageSPARK message ID. Will be unique.
+          example: SMS20240325T122739-500492-1545
+        direction:
+          type: string
+          enum:
+          - egress
+          - ingress
+          description: Egress or Ingress message
+          example: egress
+        created:
+          type: string
+          format: date-time
+          description: Time the messages got created. Delivery (if any) will be after this.
+          example: '2024-03-26T12:35:15.530548089Z'
+        sender:
+          type: string
+          description: Sender of the message. Won't be present if the user doesn't have permissions to
+            see this field.
+        recipient:
+          type: string
+          description: Sender of the message. Won't be present if the user doesn't have permissions to
+            see this field.
+        contactId:
+          type: integer
+          description: engageSPARK contact ID.
+          example: 123456
+        pricePerPart:
+          type: integer
+          description: The charged price in micro USD per part of the SMS.
+          example: 20000
+        done:
+          type: boolean
+          description: If not true engageSPARK will try more deliveries still.
+          example: true
+        successPartCount:
+          type: integer
+          description: Number of parts a successful SMS was made of.
+          example: 2
+        successT:
+          type: string
+          format: date-time
+          description: Time the message got sent.
+          example: '2024-03-26T12:35:15.530548089Z'
+        message:
+          type: string
+          description: The message as we (tried to) send. Personalization, if any, will be expanded.
+          example: Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.
+        error:
+          type: string
+          description: 'Description what went wrong when passing the SMS to the telco for delivery.
+
+            This is the error you want to look at, if `deliveredToTelco` is `false`.
+
+            Note that this field can be empty while the Delivery Receipt does indicate a problem.'
+        deliveryError:
+          type: string
+          description: 'Delivery Receipt error, if any.
+
+            This is set, if `deliveredToTelco` is `true` and `deliveredToPhone` is `failed`.
+
+            Examples of possible errors:
+
+            - anti-spam filter
+
+            - blocked
+
+            - contact absent
+
+            - contact absent - permanent
+
+            - contact absent - temporary
+
+            - contact error
+
+            - contact phone issue
+
+            - expired
+
+            - message error
+
+            - network error
+
+            - no route
+
+            - not mobile number
+
+            - opted out of promotional messaging
+
+            - unknown
+
+            - unreachable'
+        deliveredToTelco:
+          type: boolean
+          description: 'Was this SMS successfully delivered to our telco partner?
+
+
+            True if the message is successfully delivered to the telco partner. False if there was an
+            error or while the message is still being delivered.
+
+
+            Note that this is the first step. It does not mean it has reached the handset.'
+        deliveredToPhone:
+          type: string
+          enum:
+          - unknown
+          - confirmed
+          - failed
+          description: 'The Delivery Receipt status of this SMS.
+
+
+            Not all telcos support delivery receipts and they are not always reliable. This varies per
+            telco per country. Contact us to know if delivery receipts are available in your program country,
+            and how reliable they can be expected to be.
+
+
+            - unknown – means we haven’t received a delivery receipt from the telecom. This can happen
+            either when (a) deliveredToTelco is `false` OR (b) deliveredToTelco is `true` but the vendor
+            hasn’t sent us the delivery receipt, yet.
+
+            - confirmed – means we received the delivery receipt from the telecom and it says that, yes,
+            the SMS was delivered.
+
+            - failed – means we received the delivery receipt from the telecom and it says the SMS could
+            not be delivered.'
+        client_ref:
+          type: string
+          description: The value set in the "clientRef" value in the original "send SMS" API call. engageSPARK
+            doesn't do anything with this value, besides returning it here.
+        chargedMicro:
+          type: integer
+          description: The charged price in micro USD in total. In case of refunds this can be 0.
+          example: 40000
+        chargedHuman:
+          type: string
+          description: The charged price in USD as string. Has 2 digits, but 6 if there charge uses amounts
+            smaller than cents.
+          example: '0.40'
+    schema_file:
+      type: object
+      required:
+      - filename
+      - title
+      - category
+      - transcript
+      - size
+      - sha1
+      - upload
+      - thumb
+      properties:
+        filename:
+          type: string
+          description: The name of the file.
+          example: 01-example.mp3
+        title:
+          type: string
+          description: The title of the file.
+          example: 01 - Example.mp3
+        category:
+          type: string
+          description: The category of the file given on upload.
+          example: uploads
+        transcript:
+          type: string
+          description: Transcript previously set. This field isn't set automatically.
+          example: Lovely weather today.
+        size:
+          type: number
+          description: The size of the file in bytes.
+          example: 123456
+        sha1:
+          type: string
+          description: The SHA1 checksum of the file.
+          example: 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
+        upload:
+          type: string
+          format: date-time
+          description: The date and time when the file was uploaded.
+          example: '2023-05-23T13:45:00Z'
+        thumb:
+          type: boolean
+          description: We automatically generate a thumbnail for the file if the file is a video file
+            and set this property to true, which is available as /thumb/<filename>.
+          example: false
+    schema_topup:
+      type: object
+      properties:
+        id:
+          type: string
+          description: engageSPARK ID
+        done:
+          type: boolean
+          description: If false the Top-Up hasn't been successful yet, but is still being retried.
+        success:
+          type: boolean
+          description: If true we executed the Top-Up successfully. See "error".
+        error:
+          type: string
+          description: Error describing the problem, if any.
+        clientRef:
+          type: string
+          description: As given in the original request.
+        topupCurrency:
+          type: string
+          description: The currency used, e.g. USD.
+        topupReceived:
+          type: number
+          description: The amount the user got on their phone.
+        priceCharged:
+          type: number
+          description: What you got charged.
+        firstName:
+          type: string
+          description: If the user has a contact in the engageSPARK system, this is the first name of
+            that contact.
+        lastName:
+          type: string
+          description: If the user has a contact in the engageSPARK system, this is the last name of that
+            contact.
+    schema_model_whatsapp:
+      type: object
+      properties:
+        id:
+          type: string
+          description: engageSPARK message ID. Will be unique.
+          example: WAIN20250613T114721-763096
+        direction:
+          type: string
+          enum:
+          - egress
+          - ingress
+          description: Egress or Ingress message
+          example: egress
+        created:
+          type: string
+          format: date-time
+          description: Time the messages got created. Delivery (if any) will be after this.
+          example: '2024-03-26T12:35:15.530548089Z'
+        sender:
+          type: string
+          description: Sender of the message. Won't be present if the user doesn't have permissions to
+            see this field.
+        recipient:
+          type: string
+          description: Recipient of the message. Won't be present if the user doesn't have permissions
+            to see this field.
+        contactId:
+          type: integer
+          description: engageSPARK contact ID.
+          example: 123456
+        done:
+          type: boolean
+          description: If not true engageSPARK will try more deliveries still.
+          example: true
+        read:
+          type: boolean
+          example: true
+        readAt:
+          type: string
+          format: date-time
+          description: When we got the "read" confirmation. Only relevant if .read is true.
+          example: '2024-03-26T12:35:15Z'
+        successT:
+          type: string
+          format: date-time
+          description: Time the message got sent.
+          example: '2024-03-26T12:35:15Z'
+        message:
+          type: string
+          description: The message as we (tried to) send. Personalization, if any, will be expanded.
+          example: Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.
+        imageFiles:
+          type: array
+          items:
+            type: string
+          description: Images attached to the message. Load them via /v1/organizations/${ORGID}/files/[filename]
+          example:
+          - cat.jpg
+        audioFiles:
+          type: array
+          items:
+            type: string
+          description: Audio files attached to the message. Load them via /v1/organizations/${ORGID}/files/[filename]
+          example:
+          - cat.mp3
+        videoFiles:
+          type: array
+          items:
+            type: string
+          description: Video files attached to the message. Load them via /v1/organizations/${ORGID}/files/[filename]
+          example:
+          - cat.mov
+        documentFiles:
+          type: array
+          items:
+            type: string
+          description: Documents attached to the message. Load them via /v1/organizations/${ORGID}/files/[filename]
+          example:
+          - cat.pdf
+        fullFilePaths:
+          type: array
+          items:
+            type: string
+          description: Full file paths for all attached files (images, audio, video, documents). These
+            will be the same as the imageFiles, audioFiles, videoFiles, and documentFiles combined, but
+            here they are not just the filename, but the full paths to download the files.
+          example:
+          - /v1/organizations/123/files/cat.jpg
+        location:
+          type: object
+          description: Set if the contact sends their location. Only supported for inbound messages (direction=ingress).
+          properties:
+            latitude:
+              type: string
+              example: '43.586399078369'
+            longitude:
+              type: string
+              example: '1.4468078613281'
+            address:
+              type: string
+              example: 39 Grande Rue Saint-Michel, Toulouse, Occitanie 31400
+            label:
+              type: string
+              example: Tower Of London
+        content:
+          type: object
+          description: object complicated WhatsApp messages.
+        error:
+          type: string
+          description: 'Description what went wrong when passing the SMS to the telco for delivery.
+
+            This is the error you want to look at, if `deliveredToTelco` is `false`.
+
+            Note that this field can be empty while the Delivery Receipt does indicate a problem.'
+        deliveryError:
+          type: string
+          description: 'Delivery Receipt error, if any.
+
+            This is set, if `deliveredToTelco` is `true` and `deliveredToPhone` is `failed`.
+
+            Examples of possible errors:
+
+            - anti-spam filter
+
+            - blocked
+
+            - contact absent
+
+            - contact absent - permanent
+
+            - contact absent - temporary
+
+            - contact error
+
+            - contact phone issue
+
+            - expired
+
+            - message error
+
+            - network error
+
+            - no route
+
+            - not mobile number
+
+            - opted out of promotional messaging
+
+            - unknown
+
+            - unreachable'
+        deliveredToPhone:
+          type: string
+          enum:
+          - unknown
+          - confirmed
+          - failed
+          description: 'The Delivery Receipt status of this SMS.
+
+
+            Not all telcos support delivery receipts and they are not always reliable. This varies per
+            telco per country. Contact us to know if delivery receipts are available in your program country,
+            and how reliable they can be expected to be.
+
+
+            - unknown – means we haven’t received a delivery receipt from the telecom. This can happen
+            either when (a) deliveredToTelco is `false` OR (b) deliveredToTelco is `true` but the vendor
+            hasn’t sent us the delivery receipt, yet.
+
+            - confirmed – means we received the delivery receipt from the telecom and it says that, yes,
+            the SMS was delivered.
+
+            - failed – means we received the delivery receipt from the telecom and it says the SMS could
+            not be delivered.'
+        charged:
+          type: integer
+          description: The charged price in micro USD in total. In case of refunds this can be 0.
+          example: 40000
