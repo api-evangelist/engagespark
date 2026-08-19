@@ -1,0 +1,1656 @@
+{
+  "item": [
+    {
+      "id": "3cde3154-51d9-4890-a8b2-4530eedbefa3",
+      "name": "Contacts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "61a8575e-897e-4aed-94ec-a9f44acb2096",
+          "name": "List all contacts for an organization",
+          "request": {
+            "name": "List all contacts for an organization",
+            "description": {
+              "content": "List all contacts for an organization, with optional filtering and pagination.\n\nYou can filter contacts by:\n  - Search terms (searches names and phone numbers)\n  - Group membership\n  - Full phone number\n  - Local phone number + Country\n  - Custom conditions\n  - Subscription status\n  - No-autodelete setting\n  - WhatsApp Business User ID set\n\n\nUse the `subscriptionstatus` parameter to include subscription status information for a specific campaign. Use the `subscriptionfilter` parameter to filter by subscription status.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "contacts",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "The page number to retrieve."
+                },
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<integer>",
+                  "description": "The requested number of items on a page."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Search term to filter contacts by name or phone number"
+                },
+                {
+                  "disabled": false,
+                  "key": "phonenumber",
+                  "value": "<string>",
+                  "description": "Filter by international phone number (E164, with optional leading +). If \"region\" is given this should be a local phone number."
+                },
+                {
+                  "disabled": false,
+                  "key": "region",
+                  "value": "<string>",
+                  "description": "Used together with phonenumber, this is the country 2 letter name."
+                },
+                {
+                  "disabled": false,
+                  "key": "groupid",
+                  "value": "<integer>",
+                  "description": "Filter by group ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "noautodelete",
+                  "value": "<boolean>",
+                  "description": "Filter by no-autodelete setting"
+                },
+                {
+                  "disabled": false,
+                  "key": "whatsappready",
+                  "value": "<boolean>",
+                  "description": "Filter by contacts which have WhatsApp Business User ID set"
+                },
+                {
+                  "disabled": false,
+                  "key": "conditions",
+                  "value": "<string>",
+                  "description": "JSON string of custom conditions for filtering see schema_condition.yaml"
+                },
+                {
+                  "disabled": false,
+                  "key": "subscriptionstatus",
+                  "value": "<integer>",
+                  "description": "Campaign ID to include subscription status information"
+                },
+                {
+                  "disabled": false,
+                  "key": "subscriptionfilter",
+                  "value": "<string>",
+                  "description": "Filter by subscription status (requires subscriptionstatus parameter)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "7441a7b1-3dca-48d6-88a5-78cc0827dfb5",
+              "name": "List of contacts",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "john"
+                    },
+                    {
+                      "key": "phonenumber",
+                      "value": "1234567890"
+                    },
+                    {
+                      "key": "region",
+                      "value": "PH"
+                    },
+                    {
+                      "key": "groupid",
+                      "value": "123"
+                    },
+                    {
+                      "key": "noautodelete",
+                      "value": "true"
+                    },
+                    {
+                      "key": "whatsappready",
+                      "value": "true"
+                    },
+                    {
+                      "key": "conditions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "subscriptionstatus",
+                      "value": "456"
+                    },
+                    {
+                      "key": "subscriptionfilter",
+                      "value": "is"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total\": 250,\n  \"orgTotal\": 1000,\n  \"contacts\": [\n    {\n      \"id\": 12345,\n      \"fullPhoneNumber\": \"631234567890\",\n      \"firstName\": \"Mary\",\n      \"lastName\": \"Sue\",\n      \"language\": \"Vietnamese\",\n      \"groups\": [\n        26599,\n        26610,\n        26626\n      ],\n      \"customFields\": {\n        \"120\": \"blue\",\n        \"121\": \"soy beans\"\n      },\n      \"carrier\": \"Vodafone\",\n      \"createdAt\": \"2020-05-28T10:59:45.061156Z\",\n      \"updatedAt\": \"2020-05-28T10:59:45.061156Z\",\n      \"lastUseAt\": \"2020-05-28T10:59:45.061156Z\",\n      \"noAutodelete\": true,\n      \"withBsuid\": false,\n      \"invalid\": false,\n      \"subscription\": {\n        \"totalCount\": 3,\n        \"inProgressCount\": 1,\n        \"doneCount\": 2,\n        \"unsubbedCount\": 0,\n        \"errorCount\": 0,\n        \"withFailuresCount\": 0,\n        \"activeId\": 12345,\n        \"lastId\": 12345\n      }\n    },\n    {\n      \"id\": 12345,\n      \"fullPhoneNumber\": \"631234567890\",\n      \"firstName\": \"Mary\",\n      \"lastName\": \"Sue\",\n      \"language\": \"Vietnamese\",\n      \"groups\": [\n        26599,\n        26610,\n        26626\n      ],\n      \"customFields\": {\n        \"120\": \"blue\",\n        \"121\": \"soy beans\"\n      },\n      \"carrier\": \"Vodafone\",\n      \"createdAt\": \"2020-05-28T10:59:45.061156Z\",\n      \"updatedAt\": \"2020-05-28T10:59:45.061156Z\",\n      \"lastUseAt\": \"2020-05-28T10:59:45.061156Z\",\n      \"noAutodelete\": false,\n      \"withBsuid\": false,\n      \"invalid\": false,\n      \"subscription\": {\n        \"totalCount\": 3,\n        \"inProgressCount\": 1,\n        \"doneCount\": 2,\n        \"unsubbedCount\": 0,\n        \"errorCount\": 0,\n        \"withFailuresCount\": 0,\n        \"activeId\": 12345,\n        \"lastId\": 12345\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "be0bea33-b87b-4834-90b7-8340a7a7d492",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "john"
+                    },
+                    {
+                      "key": "phonenumber",
+                      "value": "1234567890"
+                    },
+                    {
+                      "key": "region",
+                      "value": "PH"
+                    },
+                    {
+                      "key": "groupid",
+                      "value": "123"
+                    },
+                    {
+                      "key": "noautodelete",
+                      "value": "true"
+                    },
+                    {
+                      "key": "whatsappready",
+                      "value": "true"
+                    },
+                    {
+                      "key": "conditions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "subscriptionstatus",
+                      "value": "456"
+                    },
+                    {
+                      "key": "subscriptionfilter",
+                      "value": "is"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Too many failed login attempts\",\n  \"errorCode\": \"login.locked\",\n  \"context\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dba675f2-8e89-4401-a64f-0486e421cc83",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "john"
+                    },
+                    {
+                      "key": "phonenumber",
+                      "value": "1234567890"
+                    },
+                    {
+                      "key": "region",
+                      "value": "PH"
+                    },
+                    {
+                      "key": "groupid",
+                      "value": "123"
+                    },
+                    {
+                      "key": "noautodelete",
+                      "value": "true"
+                    },
+                    {
+                      "key": "whatsappready",
+                      "value": "true"
+                    },
+                    {
+                      "key": "conditions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "subscriptionstatus",
+                      "value": "456"
+                    },
+                    {
+                      "key": "subscriptionfilter",
+                      "value": "is"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "43387a38-cbec-4361-89a7-366af0a7380e",
+              "name": "Internal server error, something went wrong on the server side. Please contact support.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "john"
+                    },
+                    {
+                      "key": "phonenumber",
+                      "value": "1234567890"
+                    },
+                    {
+                      "key": "region",
+                      "value": "PH"
+                    },
+                    {
+                      "key": "groupid",
+                      "value": "123"
+                    },
+                    {
+                      "key": "noautodelete",
+                      "value": "true"
+                    },
+                    {
+                      "key": "whatsappready",
+                      "value": "true"
+                    },
+                    {
+                      "key": "conditions",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "subscriptionstatus",
+                      "value": "456"
+                    },
+                    {
+                      "key": "subscriptionfilter",
+                      "value": "is"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e31b2763-3e1c-4d1a-ab7d-6e380812796f",
+          "name": "Create a new contact in the system",
+          "request": {
+            "name": "Create a new contact in the system",
+            "description": {
+              "content": "Add a new contact to the system. This will return a contact ID which can be used in other engageSPARK APIs.\n\nMost APIs will create a contact on the fly when you use a new phone number, but creating it explicitly gives you more control over the contact fields (such as \"first name\").\n\nExactly one of \"fullPhoneNumber\", or \"phoneNumber\" with \"phoneNumberCountry\" needs to be set.\n\nUsing this API you can create multiple different contacts with the same phone number.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "contacts",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullPhoneNumber\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"phoneNumberCountry\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"language\": \"<string>\",\n  \"groups\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"customFields\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  },\n  \"customFieldsByName\": \"<object>\",\n  \"noAutodelete\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b3b90cd9-caf0-453a-871f-7f1ccade7ef7",
+              "name": "Contact created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    1,\n    3,\n    144,\n    52\n  ],\n  \"customFields\": {\n    \"42\": \"green\"\n  },\n  \"customFieldsByName\": {\n    \"Favorite color\": \"green\"\n  },\n  \"noAutodelete\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 12345,\n  \"fullPhoneNumber\": \"631234567890\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    26599,\n    26610,\n    26626\n  ],\n  \"customFields\": {\n    \"120\": \"blue\",\n    \"121\": \"soy beans\"\n  },\n  \"carrier\": \"Vodafone\",\n  \"createdAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"updatedAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"lastUseAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"noAutodelete\": false,\n  \"withBsuid\": false,\n  \"invalid\": false,\n  \"subscription\": {\n    \"totalCount\": 3,\n    \"inProgressCount\": 1,\n    \"doneCount\": 2,\n    \"unsubbedCount\": 0,\n    \"errorCount\": 0,\n    \"withFailuresCount\": 0,\n    \"activeId\": 12345,\n    \"lastId\": 12345\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ee261924-f1c9-4bed-aea1-6f9040dea156",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    1,\n    3,\n    144,\n    52\n  ],\n  \"customFields\": {\n    \"42\": \"green\"\n  },\n  \"customFieldsByName\": {\n    \"Favorite color\": \"green\"\n  },\n  \"noAutodelete\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Too many failed login attempts\",\n  \"errorCode\": \"login.locked\",\n  \"context\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77c5b9cb-6953-4e28-9b34-4bafcaebbeb9",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    1,\n    3,\n    144,\n    52\n  ],\n  \"customFields\": {\n    \"42\": \"green\"\n  },\n  \"customFieldsByName\": {\n    \"Favorite color\": \"green\"\n  },\n  \"noAutodelete\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "46b37a16-9d0e-4be7-a466-b3269cbf5802",
+              "name": "Internal server error, something went wrong on the server side. Please contact support.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    1,\n    3,\n    144,\n    52\n  ],\n  \"customFields\": {\n    \"42\": \"green\"\n  },\n  \"customFieldsByName\": {\n    \"Favorite color\": \"green\"\n  },\n  \"noAutodelete\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7f1c2801-5690-413c-bd54-06ffc44dbbfa",
+          "name": "Get a single contact by ID",
+          "request": {
+            "name": "Get a single contact by ID",
+            "description": {
+              "content": "Load a contact with all groups, segments, and custom fields.\n\nUse the `subscriptionstatus` parameter to include subscription status information for a specific campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "contacts",
+                ":contactId",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "subscriptionstatus",
+                  "value": "<integer>",
+                  "description": "Campaign ID to include subscription status information"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contactId",
+                  "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "31f5094c-44ed-4e4e-9bbf-bb41ddf99239",
+              "name": "Contact created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "subscriptionstatus",
+                      "value": "456"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 12345,\n  \"fullPhoneNumber\": \"631234567890\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    26599,\n    26610,\n    26626\n  ],\n  \"customFields\": {\n    \"120\": \"blue\",\n    \"121\": \"soy beans\"\n  },\n  \"carrier\": \"Vodafone\",\n  \"createdAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"updatedAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"lastUseAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"noAutodelete\": false,\n  \"withBsuid\": false,\n  \"invalid\": false,\n  \"subscription\": {\n    \"totalCount\": 3,\n    \"inProgressCount\": 1,\n    \"doneCount\": 2,\n    \"unsubbedCount\": 0,\n    \"errorCount\": 0,\n    \"withFailuresCount\": 0,\n    \"activeId\": 12345,\n    \"lastId\": 12345\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8924eb3b-c469-44e1-8d8b-c5ec8131940a",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "subscriptionstatus",
+                      "value": "456"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bbd7d965-d0d1-4ad3-9dd3-b19d1fa05ed1",
+              "name": "Contact not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "subscriptionstatus",
+                      "value": "456"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Not found\",\n  \"errorCode\": \"contact.notfound\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "daed36ef-181b-4e5e-a1cd-c64b49305227",
+              "name": "Internal server error, something went wrong on the server side. Please contact support.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "subscriptionstatus",
+                      "value": "456"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4462c45b-ef6d-4440-94b4-6b5caba2370c",
+          "name": "Update an existing contact",
+          "request": {
+            "name": "Update an existing contact",
+            "description": {
+              "content": "Update a contact. Only fields that are set will be updated.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "contacts",
+                ":contactId",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contactId",
+                  "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullPhoneNumber\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"language\": \"<string>\",\n  \"groups\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"customFields\": {\n    \"key_0\": \"<string>\"\n  },\n  \"customFieldsByName\": \"<object>\",\n  \"noAutodelete\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c7f51711-c5ac-4600-8882-c2b010f82059",
+              "name": "Contact updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullPhoneNumber\": \"631234567890\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    1,\n    3,\n    144,\n    52\n  ],\n  \"customFields\": {\n    \"42\": \"green\"\n  },\n  \"customFieldsByName\": {\n    \"Favorite color\": \"green\"\n  },\n  \"noAutodelete\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 12345,\n  \"fullPhoneNumber\": \"631234567890\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    26599,\n    26610,\n    26626\n  ],\n  \"customFields\": {\n    \"120\": \"blue\",\n    \"121\": \"soy beans\"\n  },\n  \"carrier\": \"Vodafone\",\n  \"createdAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"updatedAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"lastUseAt\": \"2020-05-28T10:59:45.061156Z\",\n  \"noAutodelete\": false,\n  \"withBsuid\": false,\n  \"invalid\": false,\n  \"subscription\": {\n    \"totalCount\": 3,\n    \"inProgressCount\": 1,\n    \"doneCount\": 2,\n    \"unsubbedCount\": 0,\n    \"errorCount\": 0,\n    \"withFailuresCount\": 0,\n    \"activeId\": 12345,\n    \"lastId\": 12345\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "111549da-3560-44a6-bf81-79623ee6cfcf",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullPhoneNumber\": \"631234567890\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    1,\n    3,\n    144,\n    52\n  ],\n  \"customFields\": {\n    \"42\": \"green\"\n  },\n  \"customFieldsByName\": {\n    \"Favorite color\": \"green\"\n  },\n  \"noAutodelete\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Too many failed login attempts\",\n  \"errorCode\": \"login.locked\",\n  \"context\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2c800d28-97ea-47e0-8589-adca28dc64db",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullPhoneNumber\": \"631234567890\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    1,\n    3,\n    144,\n    52\n  ],\n  \"customFields\": {\n    \"42\": \"green\"\n  },\n  \"customFieldsByName\": {\n    \"Favorite color\": \"green\"\n  },\n  \"noAutodelete\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a2094d87-a635-423b-838e-53ffc8a4b1c4",
+              "name": "Internal server error, something went wrong on the server side. Please contact support.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullPhoneNumber\": \"631234567890\",\n  \"firstName\": \"Mary\",\n  \"lastName\": \"Sue\",\n  \"language\": \"Vietnamese\",\n  \"groups\": [\n    1,\n    3,\n    144,\n    52\n  ],\n  \"customFields\": {\n    \"42\": \"green\"\n  },\n  \"customFieldsByName\": {\n    \"Favorite color\": \"green\"\n  },\n  \"noAutodelete\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ec1451e5-2fae-4d02-92b9-b13767d814d7",
+          "name": "Delete a contact from the system",
+          "request": {
+            "name": "Delete a contact from the system",
+            "description": {
+              "content": "Delete a contact. Will return a 404 if the contact did not exist.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "contacts",
+                ":contactId",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "contactId",
+                  "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE"
+          },
+          "response": [
+            {
+              "id": "7d8ec55c-cbbf-4a33-a961-5a2e2901f645",
+              "name": "Contact deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "994be183-8764-4ecb-b898-2b2db5ed0632",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f691edd9-e2eb-4e40-b3ca-d4fb18cef21c",
+              "name": "Not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b77bb99e-9977-45c1-a287-d2d1028acd3d",
+              "name": "Internal server error, something went wrong on the server side. Please contact support.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "contacts",
+                    ":contactId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "contactId",
+                      "description": "(Required) engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.engagespark.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "1e19128c-d23e-4906-a54a-9b0281982c2b",
+    "name": "engageSPARK Balance Contacts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API documentation for [engageSPARK](https://www.engagespark.com/).\n\nTo use this API you need an \"Access token\", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header \"Authorization\" with the value \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nPlease see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.",
+      "type": "text/plain"
+    }
+  }
+}

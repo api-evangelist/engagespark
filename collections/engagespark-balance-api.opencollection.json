@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "engageSPARK Balance API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Balance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get organization balance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/balance.json",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              }
+            ]
+          },
+          "docs": "Get the current balance of the organization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

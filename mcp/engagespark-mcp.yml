@@ -77,3 +77,9 @@ tools:
 - name: getWhatsApp
   description: Get a single WhatsApp message by ID
   source_operation: openapi/engagespark-openapi-original.yml#getWhatsApp
+deployment:
+  mode: none
+  verified: derived
+  tools: 23
+  checked: '2026-08-12'
+  source: catalog MCP census

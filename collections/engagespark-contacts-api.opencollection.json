@@ -1,0 +1,211 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "engageSPARK Balance Contacts API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all contacts for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/contacts/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "page",
+                "value": "2",
+                "type": "query",
+                "description": "The page number to retrieve."
+              },
+              {
+                "name": "size",
+                "value": "10",
+                "type": "query",
+                "description": "The requested number of items on a page."
+              },
+              {
+                "name": "search",
+                "value": "john",
+                "type": "query",
+                "description": "Search term to filter contacts by name or phone number"
+              },
+              {
+                "name": "phonenumber",
+                "value": "1234567890",
+                "type": "query",
+                "description": "Filter by international phone number (E164, with optional leading +). If \"region\" is given this should be a local phone number."
+              },
+              {
+                "name": "region",
+                "value": "PH",
+                "type": "query",
+                "description": "Used together with phonenumber, this is the country 2 letter name."
+              },
+              {
+                "name": "groupid",
+                "value": "123",
+                "type": "query",
+                "description": "Filter by group ID"
+              },
+              {
+                "name": "noautodelete",
+                "value": "true",
+                "type": "query",
+                "description": "Filter by no-autodelete setting"
+              },
+              {
+                "name": "whatsappready",
+                "value": "true",
+                "type": "query",
+                "description": "Filter by contacts which have WhatsApp Business User ID set"
+              },
+              {
+                "name": "conditions",
+                "value": "",
+                "type": "query",
+                "description": "JSON string of custom conditions for filtering see schema_condition.yaml"
+              },
+              {
+                "name": "subscriptionstatus",
+                "value": "456",
+                "type": "query",
+                "description": "Campaign ID to include subscription status information"
+              },
+              {
+                "name": "subscriptionfilter",
+                "value": "is",
+                "type": "query",
+                "description": "Filter by subscription status (requires subscriptionstatus parameter)"
+              }
+            ]
+          },
+          "docs": "List all contacts for an organization, with optional filtering and pagination.\n\nYou can filter contacts by:\n  - Search terms (searches names and phone numbers)\n  - Group membership\n  - Full phone number\n  - Local phone number + Country\n  - Custom conditions\n  - Subscription status\n  - No-autodelete setting\n  - WhatsApp Business User ID set\n\n\nUse the `subscriptionstatus` parameter to include subscription status information for a specific campaign. Use the `subscriptionfilter` parameter to filter "
+        },
+        {
+          "info": {
+            "name": "Create a new contact in the system",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/contacts/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a new contact to the system. This will return a contact ID which can be used in other engageSPARK APIs.\n\nMost APIs will create a contact on the fly when you use a new phone number, but creating it explicitly gives you more control over the contact fields (such as \"first name\").\n\nExactly one of \"fullPhoneNumber\", or \"phoneNumber\" with \"phoneNumberCountry\" needs to be set.\n\nUsing this API you can create multiple different contacts with the same phone number."
+        },
+        {
+          "info": {
+            "name": "Get a single contact by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/contacts/:contactId/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+              },
+              {
+                "name": "subscriptionstatus",
+                "value": "456",
+                "type": "query",
+                "description": "Campaign ID to include subscription status information"
+              }
+            ]
+          },
+          "docs": "Load a contact with all groups, segments, and custom fields.\n\nUse the `subscriptionstatus` parameter to include subscription status information for a specific campaign."
+        },
+        {
+          "info": {
+            "name": "Update an existing contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/contacts/:contactId/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a contact. Only fields that are set will be updated."
+        },
+        {
+          "info": {
+            "name": "Delete a contact from the system",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/contacts/:contactId/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the contact.\nYou get this ID when creating a contact."
+              }
+            ]
+          },
+          "docs": "Delete a contact. Will return a 404 if the contact did not exist."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

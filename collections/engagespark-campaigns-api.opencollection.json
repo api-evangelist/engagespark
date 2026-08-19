@@ -1,0 +1,76 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "engageSPARK Balance Campaigns API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Subscribe a contact to a campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/engagements/:campaignId/subscribe",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "campaignId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the campaign.\nYou can find this ID when editing your campaign, or copy it in the actions drop down in the campaigns list."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a contact to a campaign. The campaign must be launched, not stopped, and it must be open to new subscriptions.\n\nExactly one of \"contactId\", \"fullPhoneNumber\", or \"phoneNumber\" with \"phoneNumberCountry\" needs to be set.\n\nThis API will return an error if the contact already has an active (`done == false`) subscription. However, a user can have multiple subscriptions with the same campaign over time. You can set the `allowResubscribe` flag to false if you want the request to fail in case the us"
+        },
+        {
+          "info": {
+            "name": "Unsubscribe a contact from a campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/engagements/:campaignId/unsubscribe",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "campaignId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the campaign.\nYou can find this ID when editing your campaign, or copy it in the actions drop down in the campaigns list."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Unsubscribe a single contact from a campaign.\n\nThe call will cancel any subscription from the given contact ID, if there is any active subscription. Because this is actually an abort the subscription will be listed as \"error\" in reports.\n\nIt's fine to call this if there are no, or no active, subscriptions for the contact."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

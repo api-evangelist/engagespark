@@ -1,0 +1,169 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "engageSPARK Balance Files API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Files",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all files of an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/files/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "query",
+                "description": "Optional category filter for the files."
+              }
+            ]
+          },
+          "docs": "This endpoint returns all saved files data of an organization.\nThe files are sorted by their user defined title fields."
+        },
+        {
+          "info": {
+            "name": "Upload files to storage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/files/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "category",
+                "value": "uploads",
+                "type": "query",
+                "description": "The category of the file(s)."
+              },
+              {
+                "name": "filter",
+                "value": "mp3",
+                "type": "query",
+                "description": "Optionally convert audio files. Don't use this on non-audio files. The file is processed by the sox audio processor."
+              },
+              {
+                "name": "video",
+                "value": "false",
+                "type": "query",
+                "description": "We don't recode video, if this option is set (any value), we check if the file is compatible with whatsapp, checking against its limitations: - needs to be h264 video - needs to have aac audio - smaller than 16MB - at least a second long\nWe also add a thumbnail of the video to the storage system"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "upload",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Upload files to our storage system. This uses the basic \"file upload\" mechanism browsers use (multipart).\nWe store the filename (without the path) as the title field in the file record. The returned filename is the unique identifier for the file. It is based on the title to make nice paths.\nYou can upload multiple files. If there's only 1 file this endpoint will return with a 400 error, if there are multiple files in the upload the \"results\" will have the errors."
+        },
+        {
+          "info": {
+            "name": "Download a file by filename",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/files/:filename",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "filename",
+                "value": "report_01.xlsx",
+                "type": "path",
+                "description": "The name and extension of the file."
+              }
+            ]
+          },
+          "docs": "This endpoint provides the raw file referenced by its unique file name for download."
+        },
+        {
+          "info": {
+            "name": "Update a file metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/files/:filename",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "filename",
+                "value": "report_01.xlsx",
+                "type": "path",
+                "description": "The name and extension of the file."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a file. Only the given keys are updated. Category and Title are read-only and cannot be updated."
+        },
+        {
+          "info": {
+            "name": "Delete a file from storage",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/files/:filename",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "filename",
+                "value": "report_01.xlsx",
+                "type": "path",
+                "description": "The name and extension of the file."
+              }
+            ]
+          },
+          "docs": "This endpoint deletes a file from the organization's storage."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,146 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "engageSPARK Balance SMS API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SMS",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send an SMS to a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engagespark.com/v1/sms/contact",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send a single SMS to a contact. If there is no existing contact with the phone number a contact will be created.\n\nUnicode and multi-part SMS are supported. See `message` for details.\n\nExactly one of \"contactId\", \"fullPhoneNumber\", or \"phoneNumber\" with \"phoneNumberCountry\" need to be set.\n\nRetries: The SMS API automatically re-tries failed messages as often as possible within 24 hours by default. To know until when we’ll keep retrying your message, you can refer to the deliveryDeadline of your P"
+        },
+        {
+          "info": {
+            "name": "Send SMS without contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engagespark.com/v1/sms/phonenumber",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Single SMS to a phone number without creating or using a contact.\n\nIf needed the message will be sent in multiple parts, which should automatically be reassembled on the user's phone.\n\nExactly one of \"fullPhoneNumber\", or \"phoneNumber\" with \"phoneNumberCountry\" need to be set."
+        },
+        {
+          "info": {
+            "name": "List SMSs for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/messages/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "See \"nextPage\" in the response."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results per API call."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Show this page. Starts at 1!"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "Used when ?page is set. The default and the maximum is 1000."
+              },
+              {
+                "name": "dir",
+                "value": "",
+                "type": "query",
+                "description": "Limit to only egress, only ingress, or all directions. An empty value is the same as \"all\"."
+              },
+              {
+                "name": "failed",
+                "value": "",
+                "type": "query",
+                "description": "Limit to/exclude failed deliveries. Failed means the message didn't get delivered at all. Delivery Receipts are not taken into account here. An empty value is the same as \"all\"."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Keyword search in the message, sender, receiver, and contact fields."
+              },
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "The creation time of the message must be >= this timestamp."
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "The creation time of the message must be < this timestamp."
+              }
+            ]
+          },
+          "docs": "List SMSs. Newest first.\n\nThe number of results per API call is limited. Either use \"nextPage\" and \"after\" to get more results, which work as a cursor, and do not change as new messages come in. Or use \"page\" and \"size\", which are classical paging, and might change as new messages come in."
+        },
+        {
+          "info": {
+            "name": "Get a single SMS by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/messages/:messageId/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "messageId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the SMS."
+              }
+            ]
+          },
+          "docs": "Load an SMS, including its delivery status."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

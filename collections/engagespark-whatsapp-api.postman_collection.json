@@ -1,0 +1,833 @@
+{
+  "item": [
+    {
+      "id": "3e14bc5c-0ddc-4db8-838c-a78b8d2e6975",
+      "name": "WhatsApp",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "87a3fedd-9ab9-4ea9-9729-0077f0826b8a",
+          "name": "Send WhatsApp Message",
+          "request": {
+            "name": "Send WhatsApp Message",
+            "description": {
+              "content": "Send a single WhatsApp message to a contact. If there is no existing contact with the phone number a contact will be created.\n\nExactly one of \"contactId\", \"fullPhoneNumber\", or \"phoneNumber\" with \"phoneNumberCountry\" need to be set.\n\nRetries: The WhatsApp API automatically re-tries failed messages as often as possible within 24 hours by default. To know until when we'll keep retrying your message, you can refer to the deliveryDeadline of the POST response.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "whatsapp",
+                "contact"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"image\": \"<string>\",\n  \"audio\": \"<string>\",\n  \"video\": \"<string>\",\n  \"document\": \"<string>\",\n  \"content\": \"<object>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"phoneNumberCountry\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cc5fb005-6362-4053-ab41-8f3bee8a9edb",
+              "name": "OK. All fields look good and we've queued the message for delivery.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "whatsapp",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"image\": \"<string>\",\n  \"audio\": \"<string>\",\n  \"video\": \"<string>\",\n  \"document\": \"<string>\",\n  \"content\": \"<object>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"messageId\": \"string\",\n  \"contactId\": 1350,\n  \"to\": \"string\",\n  \"message\": \"string\",\n  \"content\": {},\n  \"deliveryDeadline\": \"1992-02-11T13:44:19.865Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "62c20155-03a6-47ab-90cc-992df84c1667",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "whatsapp",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"image\": \"<string>\",\n  \"audio\": \"<string>\",\n  \"video\": \"<string>\",\n  \"document\": \"<string>\",\n  \"content\": \"<object>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6dc75ff9-3c9d-4a98-9fb4-d2a572786c38",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "whatsapp",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"image\": \"<string>\",\n  \"audio\": \"<string>\",\n  \"video\": \"<string>\",\n  \"document\": \"<string>\",\n  \"content\": \"<object>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "16a315de-ed24-476d-9378-3ea14ba33357",
+              "name": "Insufficient funds. Please add funds to your organization's balance and repeat the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "whatsapp",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"image\": \"<string>\",\n  \"audio\": \"<string>\",\n  \"video\": \"<string>\",\n  \"document\": \"<string>\",\n  \"content\": \"<object>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"insufficient funds\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5bdf688b-100a-4371-9ec6-a0b0f14ba4f8",
+          "name": "List WhatsApp messages for an organization",
+          "request": {
+            "name": "List WhatsApp messages for an organization",
+            "description": {
+              "content": "List WhatsApp messages. Newest first.\n\nThe number of results per API call is limited. Either use \"nextPage\" and \"after\" to get more results, which work as a cursor, and do not change as new messages come in. Or use \"page\" and \"size\", which are classical paging, and might change as new messages come in.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "whatsapp",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<string>",
+                  "description": "See \"nextPage\" in the response."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results per API call."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<string>",
+                  "description": "Show this page. Starts at 1!"
+                },
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<string>",
+                  "description": "Used when ?page is set. The default and the maximum is 1000."
+                },
+                {
+                  "disabled": false,
+                  "key": "dir",
+                  "value": "all",
+                  "description": "Limit to only egress, only ingress, or all directions. An empty value is the same as \"all\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "failed",
+                  "value": "all",
+                  "description": "Limit to/exclude failed deliveries. Failed means the message didn't get delivered at all. Delivery Receipts are not taken into account here. An empty value is the same as \"all\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Keyword search in the message, sender, receiver, and contact fields."
+                },
+                {
+                  "disabled": false,
+                  "key": "startDate",
+                  "value": "<dateTime>",
+                  "description": "The creation time of the message must be >= this timestamp."
+                },
+                {
+                  "disabled": false,
+                  "key": "endDate",
+                  "value": "<dateTime>",
+                  "description": "The creation time of the message must be < this timestamp."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "8eadc33a-fc15-4a90-92df-71ac5d33ec7d",
+              "name": "OK.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "whatsapp",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "dir",
+                      "value": "all"
+                    },
+                    {
+                      "key": "failed",
+                      "value": "all"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"messages\": [\n    {\n      \"id\": \"WAIN20250613T114721-763096\",\n      \"direction\": \"egress\",\n      \"created\": \"2024-03-26T12:35:15.530548089Z\",\n      \"sender\": \"string\",\n      \"recipient\": \"string\",\n      \"contactId\": 123456,\n      \"done\": true,\n      \"read\": true,\n      \"readAt\": \"2024-03-26T12:35:15Z\",\n      \"successT\": \"2024-03-26T12:35:15Z\",\n      \"message\": \"Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.\",\n      \"imageFiles\": [\n        \"cat.jpg\"\n      ],\n      \"audioFiles\": [\n        \"cat.mp3\"\n      ],\n      \"videoFiles\": [\n        \"cat.mov\"\n      ],\n      \"documentFiles\": [\n        \"cat.pdf\"\n      ],\n      \"fullFilePaths\": [\n        \"/v1/organizations/123/files/cat.jpg\"\n      ],\n      \"location\": {\n        \"latitude\": \"43.586399078369\",\n        \"longitude\": \"1.4468078613281\",\n        \"address\": \"39 Grande Rue Saint-Michel, Toulouse, Occitanie 31400\",\n        \"label\": \"Tower Of London\"\n      },\n      \"content\": {},\n      \"error\": \"string\",\n      \"deliveryError\": \"string\",\n      \"deliveredToPhone\": \"failed\",\n      \"charged\": 40000\n    },\n    {\n      \"id\": \"WAIN20250613T114721-763096\",\n      \"direction\": \"egress\",\n      \"created\": \"2024-03-26T12:35:15.530548089Z\",\n      \"sender\": \"string\",\n      \"recipient\": \"string\",\n      \"contactId\": 123456,\n      \"done\": true,\n      \"read\": true,\n      \"readAt\": \"2024-03-26T12:35:15Z\",\n      \"successT\": \"2024-03-26T12:35:15Z\",\n      \"message\": \"Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.\",\n      \"imageFiles\": [\n        \"cat.jpg\"\n      ],\n      \"audioFiles\": [\n        \"cat.mp3\"\n      ],\n      \"videoFiles\": [\n        \"cat.mov\"\n      ],\n      \"documentFiles\": [\n        \"cat.pdf\"\n      ],\n      \"fullFilePaths\": [\n        \"/v1/organizations/123/files/cat.jpg\"\n      ],\n      \"location\": {\n        \"latitude\": \"43.586399078369\",\n        \"longitude\": \"1.4468078613281\",\n        \"address\": \"39 Grande Rue Saint-Michel, Toulouse, Occitanie 31400\",\n        \"label\": \"Tower Of London\"\n      },\n      \"content\": {},\n      \"error\": \"string\",\n      \"deliveryError\": \"string\",\n      \"deliveredToPhone\": \"confirmed\",\n      \"charged\": 40000\n    }\n  ],\n  \"paged\": false,\n  \"hasNextPage\": false,\n  \"nextPage\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "95a1309b-ff6d-4839-acd8-ce7a14233105",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "whatsapp",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "dir",
+                      "value": "all"
+                    },
+                    {
+                      "key": "failed",
+                      "value": "all"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Too many failed login attempts\",\n  \"errorCode\": \"login.locked\",\n  \"context\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fd42955f-1d44-4b6a-843c-655cf8da9a0e",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "whatsapp",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "dir",
+                      "value": "all"
+                    },
+                    {
+                      "key": "failed",
+                      "value": "all"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c7e9ac58-88d2-467b-93c1-156eb7d45eab",
+          "name": "Get a single WhatsApp message by ID",
+          "request": {
+            "name": "Get a single WhatsApp message by ID",
+            "description": {
+              "content": "Load a WhatsApp message, including its delivery status.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "whatsapp",
+                ":messageId",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "messageId",
+                  "description": "(Required) ID of the WhatsApp message."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "e4ceab65-034a-4d1a-acf7-07baafa9cddc",
+              "name": "OK. We have the message.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "whatsapp",
+                    ":messageId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "messageId",
+                      "description": "(Required) ID of the WhatsApp message."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"WAIN20250613T114721-763096\",\n  \"direction\": \"egress\",\n  \"created\": \"2024-03-26T12:35:15.530548089Z\",\n  \"sender\": \"string\",\n  \"recipient\": \"string\",\n  \"contactId\": 123456,\n  \"done\": true,\n  \"read\": true,\n  \"readAt\": \"2024-03-26T12:35:15Z\",\n  \"successT\": \"2024-03-26T12:35:15Z\",\n  \"message\": \"Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.\",\n  \"imageFiles\": [\n    \"cat.jpg\"\n  ],\n  \"audioFiles\": [\n    \"cat.mp3\"\n  ],\n  \"videoFiles\": [\n    \"cat.mov\"\n  ],\n  \"documentFiles\": [\n    \"cat.pdf\"\n  ],\n  \"fullFilePaths\": [\n    \"/v1/organizations/123/files/cat.jpg\"\n  ],\n  \"location\": {\n    \"latitude\": \"43.586399078369\",\n    \"longitude\": \"1.4468078613281\",\n    \"address\": \"39 Grande Rue Saint-Michel, Toulouse, Occitanie 31400\",\n    \"label\": \"Tower Of London\"\n  },\n  \"content\": {},\n  \"error\": \"string\",\n  \"deliveryError\": \"string\",\n  \"deliveredToPhone\": \"confirmed\",\n  \"charged\": 40000\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "55577d67-0b0b-4a87-bb93-645deba0bf3a",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "whatsapp",
+                    ":messageId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "messageId",
+                      "description": "(Required) ID of the WhatsApp message."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38be006f-b3d5-4bdc-a430-707bbd90894d",
+              "name": "Not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "whatsapp",
+                    ":messageId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "messageId",
+                      "description": "(Required) ID of the WhatsApp message."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.engagespark.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "83fc7d94-cffa-43ef-8562-0481d9391505",
+    "name": "engageSPARK Balance WhatsApp API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API documentation for [engageSPARK](https://www.engagespark.com/).\n\nTo use this API you need an \"Access token\", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header \"Authorization\" with the value \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nPlease see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.",
+      "type": "text/plain"
+    }
+  }
+}

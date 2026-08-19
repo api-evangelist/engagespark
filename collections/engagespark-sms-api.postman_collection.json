@@ -1,0 +1,1140 @@
+{
+  "item": [
+    {
+      "id": "b50c7e41-36ea-453a-86c6-1ad70603f18a",
+      "name": "SMS",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "23c1389f-558f-448c-9bf3-088f8e774658",
+          "name": "Send an SMS to a contact",
+          "request": {
+            "name": "Send an SMS to a contact",
+            "description": {
+              "content": "Send a single SMS to a contact. If there is no existing contact with the phone number a contact will be created.\n\nUnicode and multi-part SMS are supported. See `message` for details.\n\nExactly one of \"contactId\", \"fullPhoneNumber\", or \"phoneNumber\" with \"phoneNumberCountry\" need to be set.\n\nRetries: The SMS API automatically re-tries failed messages as often as possible within 24 hours by default. To know until when we’ll keep retrying your message, you can refer to the deliveryDeadline of your POST request.\n\nTesting frequency: In many countries, mobile network operators limit the number of SMS you can send to a single number per minute often to 5 SMS/number/minute. If you send more than five SMS to a single number within a minute, some messages may not get through and will be lost.\n\nThis is the normal API for sending an SMS.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sms",
+                "contact"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"phoneNumberCountry\": \"<string>\",\n  \"to\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "586fde59-1bed-4dfc-83c7-48da0703d240",
+              "name": "OK. All fields look good and we've queued the message for delivery.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"messageId\": \"SMS20240325T122739-500492-1545\",\n  \"estimateParts\": 2,\n  \"estimateMicro\": 20000,\n  \"estimate\": \"0.02\",\n  \"deliveryDeadline\": \"2024-03-26T12:35:15.530548089Z\",\n  \"to\": \"631234567890\",\n  \"message\": \"string\",\n  \"contactId\": 12345,\n  \"clientDedup\": \"string\",\n  \"clientPushURL\": \"string\",\n  \"clientRef\": \"string\",\n  \"error\": \"duplicate clientDedup\",\n  \"dedupMessageId\": \"SMS20240325T122739-500492-1545\",\n  \"errorCode\": \"sms.clientdedup\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "46d346af-d9a8-4414-a63a-4e0163fa4681",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8526e9d7-7ae1-4980-a405-3d89f24f046e",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "825b9451-8e19-4603-acb1-1af56bf1d9b9",
+              "name": "Insufficient funds. Please add funds to your organization's balance and repeat the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"insufficient funds\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8619f1b2-f5af-4aa1-9066-bdb03630ba3b",
+              "name": "Request with duplicated \"clientDedup\" field. This new request was ignored, as the original has been executed before. All the response fields are the same as the \"200\" response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "contact"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d175e63b-a2fd-4f2d-a054-716188e51809",
+          "name": "Send SMS without contact",
+          "request": {
+            "name": "Send SMS without contact",
+            "description": {
+              "content": "Single SMS to a phone number without creating or using a contact.\n\nIf needed the message will be sent in multiple parts, which should automatically be reassembled on the user's phone.\n\nExactly one of \"fullPhoneNumber\", or \"phoneNumber\" with \"phoneNumberCountry\" need to be set.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sms",
+                "phonenumber"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"fullPhoneNumber\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"phoneNumberCountry\": \"<string>\",\n  \"to\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "38ebf3be-d23d-4500-8aad-f63182f98839",
+              "name": "OK. All fields look good and we've queued the message for delivery.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "phonenumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"messageId\": \"SMS20240325T122739-500492-1545\",\n  \"estimateParts\": 2,\n  \"estimateMicro\": 20000,\n  \"estimate\": \"0.02\",\n  \"deliveryDeadline\": \"2024-03-26T12:35:15.530548089Z\",\n  \"to\": \"631234567890\",\n  \"message\": \"string\",\n  \"contactId\": 12345,\n  \"clientDedup\": \"string\",\n  \"clientPushURL\": \"string\",\n  \"clientRef\": \"string\",\n  \"error\": \"duplicate clientDedup\",\n  \"dedupMessageId\": \"SMS20240325T122739-500492-1545\",\n  \"errorCode\": \"sms.clientdedup\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3d2f6c7f-f5da-4493-baee-b307b4e1c9b8",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "phonenumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2675a0a4-3979-4e91-8ce0-350d1b387753",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "phonenumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3a9bec56-080d-4c3c-919d-7a3dcde7a6f2",
+              "name": "Insufficient funds. Please add funds to your organization's balance and repeat the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "phonenumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"insufficient funds\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "53c7ef8f-2c22-4dad-8968-591d3efb0a3a",
+              "name": "Request with duplicated \"clientDedup\" field. This new request was ignored, as the original has been executed before. All the response fields are the same as the \"200\" response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sms",
+                    "phonenumber"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"orgId\": \"<integer>\",\n  \"from\": \"<string>\",\n  \"message\": \"<string>\",\n  \"clientDedup\": \"<string>\",\n  \"clientPushURL\": \"<string>\",\n  \"clientRef\": \"<string>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\",\n  \"to\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "938d1b66-6f2c-415b-a078-115d337b4f9a",
+          "name": "List SMSs for an organization",
+          "request": {
+            "name": "List SMSs for an organization",
+            "description": {
+              "content": "List SMSs. Newest first.\n\nThe number of results per API call is limited. Either use \"nextPage\" and \"after\" to get more results, which work as a cursor, and do not change as new messages come in. Or use \"page\" and \"size\", which are classical paging, and might change as new messages come in.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "messages",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<string>",
+                  "description": "See \"nextPage\" in the response."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results per API call."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<string>",
+                  "description": "Show this page. Starts at 1!"
+                },
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<string>",
+                  "description": "Used when ?page is set. The default and the maximum is 1000."
+                },
+                {
+                  "disabled": false,
+                  "key": "dir",
+                  "value": "all",
+                  "description": "Limit to only egress, only ingress, or all directions. An empty value is the same as \"all\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "failed",
+                  "value": "all",
+                  "description": "Limit to/exclude failed deliveries. Failed means the message didn't get delivered at all. Delivery Receipts are not taken into account here. An empty value is the same as \"all\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Keyword search in the message, sender, receiver, and contact fields."
+                },
+                {
+                  "disabled": false,
+                  "key": "startDate",
+                  "value": "<dateTime>",
+                  "description": "The creation time of the message must be >= this timestamp."
+                },
+                {
+                  "disabled": false,
+                  "key": "endDate",
+                  "value": "<dateTime>",
+                  "description": "The creation time of the message must be < this timestamp."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "dbf83d8f-351f-4da7-a1f3-93d8cc065e01",
+              "name": "OK.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "messages",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "dir",
+                      "value": "all"
+                    },
+                    {
+                      "key": "failed",
+                      "value": "all"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"messages\": [\n    {\n      \"id\": \"SMS20240325T122739-500492-1545\",\n      \"direction\": \"egress\",\n      \"created\": \"2024-03-26T12:35:15.530548089Z\",\n      \"sender\": \"string\",\n      \"recipient\": \"string\",\n      \"contactId\": 123456,\n      \"pricePerPart\": 20000,\n      \"done\": true,\n      \"successPartCount\": 2,\n      \"successT\": \"2024-03-26T12:35:15.530548089Z\",\n      \"message\": \"Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.\",\n      \"error\": \"string\",\n      \"deliveryError\": \"string\",\n      \"deliveredToTelco\": false,\n      \"deliveredToPhone\": \"confirmed\",\n      \"client_ref\": \"string\",\n      \"chargedMicro\": 40000,\n      \"chargedHuman\": \"0.40\"\n    },\n    {\n      \"id\": \"SMS20240325T122739-500492-1545\",\n      \"direction\": \"egress\",\n      \"created\": \"2024-03-26T12:35:15.530548089Z\",\n      \"sender\": \"string\",\n      \"recipient\": \"string\",\n      \"contactId\": 123456,\n      \"pricePerPart\": 20000,\n      \"done\": true,\n      \"successPartCount\": 2,\n      \"successT\": \"2024-03-26T12:35:15.530548089Z\",\n      \"message\": \"Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.\",\n      \"error\": \"string\",\n      \"deliveryError\": \"string\",\n      \"deliveredToTelco\": false,\n      \"deliveredToPhone\": \"failed\",\n      \"client_ref\": \"string\",\n      \"chargedMicro\": 40000,\n      \"chargedHuman\": \"0.40\"\n    }\n  ],\n  \"paged\": false,\n  \"hasNextPage\": true,\n  \"nextPage\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e49560da-5ddb-45b1-8f0f-ca877f0d5a08",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "messages",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "dir",
+                      "value": "all"
+                    },
+                    {
+                      "key": "failed",
+                      "value": "all"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Too many failed login attempts\",\n  \"errorCode\": \"login.locked\",\n  \"context\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8b8c2091-457d-4c80-b1fe-92b41280639a",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "messages",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "dir",
+                      "value": "all"
+                    },
+                    {
+                      "key": "failed",
+                      "value": "all"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "75a6389c-1020-4e0a-89e2-007321fc400a",
+          "name": "Get a single SMS by ID",
+          "request": {
+            "name": "Get a single SMS by ID",
+            "description": {
+              "content": "Load an SMS, including its delivery status.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "messages",
+                ":messageId",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "messageId",
+                  "description": "(Required) ID of the SMS."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "73089177-5a78-488f-9332-1b65295c613b",
+              "name": "OK. We have the SMS.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "messages",
+                    ":messageId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "messageId",
+                      "description": "(Required) ID of the SMS."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"SMS20240325T122739-500492-1545\",\n  \"direction\": \"egress\",\n  \"created\": \"2024-03-26T12:35:15.530548089Z\",\n  \"sender\": \"string\",\n  \"recipient\": \"string\",\n  \"contactId\": 123456,\n  \"pricePerPart\": 20000,\n  \"done\": true,\n  \"successPartCount\": 2,\n  \"successT\": \"2024-03-26T12:35:15.530548089Z\",\n  \"message\": \"Hello Mary Sue, we will visit your coconut farm Monday 1 April around 12:00.\",\n  \"error\": \"string\",\n  \"deliveryError\": \"string\",\n  \"deliveredToTelco\": false,\n  \"deliveredToPhone\": \"failed\",\n  \"client_ref\": \"string\",\n  \"chargedMicro\": 40000,\n  \"chargedHuman\": \"0.40\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "70b748d3-3094-40a7-a54f-b969e939d9a4",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "messages",
+                    ":messageId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "messageId",
+                      "description": "(Required) ID of the SMS."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c3cc248d-010d-4b58-8ad9-e91e04d70f83",
+              "name": "Not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "messages",
+                    ":messageId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "messageId",
+                      "description": "(Required) ID of the SMS."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.engagespark.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "08e9a670-3c4f-4219-92de-ffb6d84c6350",
+    "name": "engageSPARK Balance SMS API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API documentation for [engageSPARK](https://www.engagespark.com/).\n\nTo use this API you need an \"Access token\", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header \"Authorization\" with the value \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nPlease see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.",
+      "type": "text/plain"
+    }
+  }
+}

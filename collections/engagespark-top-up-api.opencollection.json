@@ -1,0 +1,133 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "engageSPARK Balance Top-Up API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Top-Up",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send airtime top-up to a phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/topup/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "With the engageSPARK Airtime top-up API, you can send prepaid airtime to anyone on the fly. In some countries, airtime is known as prepaid phone credit, mobile credit, or load top-up.\n\nWe are able to send very specific amounts of airtime per mobile network operator in each country.  For example, we cannot send 25 Philippine pesos of airtime to a mobile phone on the Smart mobile network in the Philippines, but we can send 25 pesos to a mobile phone on the Globe mobile network. The amounts availab"
+        },
+        {
+          "info": {
+            "name": "List Top-Ups for an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/topups/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "See \"nextPage\" in the response."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results per API call."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Show this page. Starts at 1!"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "Used when ?page is set. The default and the maximum is 1000."
+              },
+              {
+                "name": "failed",
+                "value": "",
+                "type": "query",
+                "description": "Limit to/exclude failed Top-Ups."
+              },
+              {
+                "name": "search",
+                "value": "Sue",
+                "type": "query",
+                "description": "Keyword search in the contact fields."
+              },
+              {
+                "name": "startDate",
+                "value": "2020-02-20T20:20:20Z",
+                "type": "query",
+                "description": "Create time of the Top-Up must be >= this timestamp."
+              },
+              {
+                "name": "endDate",
+                "value": "2020-02-20T20:20:20Z",
+                "type": "query",
+                "description": "Create time of the Top-Up must be < this timestamp."
+              }
+            ]
+          },
+          "docs": "List Top-Ups.\nThe number of results per API call is limited; see \"nextPage\" and \"after\" to get more results.\n\nSorted by newest first."
+        },
+        {
+          "info": {
+            "name": "Get a single Top-Up by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.engagespark.com/v1/organizations/:orgId/topups/:topupId/",
+            "params": [
+              {
+                "name": "orgId",
+                "value": "",
+                "type": "path",
+                "description": "engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+              },
+              {
+                "name": "topupId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Top-Up."
+              }
+            ]
+          },
+          "docs": "Load a Top-Up previously created."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

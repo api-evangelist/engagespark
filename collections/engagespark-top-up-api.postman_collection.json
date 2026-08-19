@@ -1,0 +1,785 @@
+{
+  "item": [
+    {
+      "id": "cc94d15d-a10a-44d2-980f-5f9c12a7fe37",
+      "name": "Top-Up",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "96a6d30e-83e7-4917-a974-7b5b802f2fac",
+          "name": "Send airtime top-up to a phone number",
+          "request": {
+            "name": "Send airtime top-up to a phone number",
+            "description": {
+              "content": "With the engageSPARK Airtime top-up API, you can send prepaid airtime to anyone on the fly. In some countries, airtime is known as prepaid phone credit, mobile credit, or load top-up.\n\nWe are able to send very specific amounts of airtime per mobile network operator in each country.  For example, we cannot send 25 Philippine pesos of airtime to a mobile phone on the Smart mobile network in the Philippines, but we can send 25 pesos to a mobile phone on the Globe mobile network. The amounts available differ by mobile network operator (telco) and by country.\n\nWith these limitations in mind, we wanted to make this API super easy to use. We didn’t want you to worry about which mobile network operator a phone number is on for you to be able to easily send prepaid airtime to that phone number. So, to simplify things, we created our Airtime top-up API with two parameters: the `maxAmount` parameter and the `desiredAmount` parameter.\n\n**maxAmount Parameter**\n\nIn the `maxAmount` parameter, you specify the maximum amount you want to send to the phone number.  If that amount is available, we’ll send that amount; if it’s not available, then we’ll send the closest amount available that is smaller than the `maxAmount` you specified.\n\nFor example, if you pass a phone number on the Globe network in the Philippines and a `maxAmount` of 25, we’ll send 25 pesos to that phone number because that’s an available amount for mobile phones on the Globe network.  But if you pass a phone number on the Smart network in the Philippines and a maxAmount of 25, we’ll send that phone number 20 pesos of airtime because that’s the closest amount available that is smaller than 25. Please refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/) to see the available amounts.\n\n**desiredAmount Parameter**\n\nThe `desiredAmount` parameter, which is optional but recommended, flips the perspective of the API.  By passing a `desiredAmount`, you can specify the top-up amount you prefer to send to the phone number.\n\nIf the `desiredAmount` is available for the phone number, then we will send that amount.  If it is not available, then we will send the next amount higher that is available, but no higher than the `maxAmount`.\n\nFor example, if you pass a phone number on the Smart network in the Philippines, a `desiredAmount` of 20, and a `maxAmount` of 30, then we’ll send 20 pesos to that phone number because that’s an available amount for mobile phones on the Smart network. But if you pass a phone number on the Globe network in the Philippines with the same `desiredAmount` and `maxAmount` parameters, we’ll send 25 pesos to that phone number because that’s the closest amount available that is greater than or equal to the `desiredAmount` of 20 and less than or equal to the `maxAmount` of 30 for mobile phones on the Globe network. As mentioned above, you can refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/) to see the available amounts.\n\n**Currencies**\n\nFor most countries, we are able to send airtime in local currency; in some countries, we can send airtime only in USD. The recipient will receive the airtime in their local currency, but the conversion from USD to the local currency will occur at the time of the transfer, so the received amount may be slightly different each time depending on exchange rates.  Moreover, in countries in which we can send in local currency, there are some circumstances where a slightly higher amount will be sent than what you specify, but you will still be charged what is listed in our pricing table for the amount you specify. Once again, please refer to our [pricing table](https://www.engagespark.com/support/airtime-topup-transfer-api-global-pricing/) to see the currencies and amounts available per telco per country.\n\n**Phone number / Contact**\n\nExactly one of `contactId`, `fullPhoneNumber`, or `phoneNumber` with `phoneNumberCountry` needs to be set.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "topup",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maxAmount\": \"<integer>\",\n  \"desiredAmount\": \"<integer>\",\n  \"clientRef\": \"<string>\",\n  \"async\": \"<boolean>\",\n  \"test\": \"<boolean>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"<string>\",\n  \"phoneNumber\": \"<string>\",\n  \"phoneNumberCountry\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d22aac0d-4346-49dd-96ce-46bfc6120bf4",
+              "name": "OK. All fields look good and we have executed the top-up.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topup",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"maxAmount\": \"<integer>\",\n  \"desiredAmount\": \"<integer>\",\n  \"clientRef\": \"<string>\",\n  \"async\": \"<boolean>\",\n  \"test\": \"<boolean>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"currency\": \"string\",\n  \"amountSent\": 5883.800371806481,\n  \"price\": 498.1184162112928,\n  \"queued\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b403bf6-51ae-43f5-808e-c6bc987fc748",
+              "name": "Queued.\n\nEither \"async\" was set, or we did not manage to do the top-up right away. The top-up will be retried a few more times for a maximum of 5 hours.\n\nThe exact schedule:\n\n - 1st retry: scheduled 1 minute after the initial request\n\n - 2nd retry: scheduled 2 minutes after the previous request\n\n - 3rd retry: scheduled 5 minutes after the previous request\n\n - 4th retry: scheduled 30 minutes after the previous request\n\n - 5th retry: scheduled 60 minutes after the previous request\n\n - 6th retry: scheduled 120 minutes after the previous request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topup",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"maxAmount\": \"<integer>\",\n  \"desiredAmount\": \"<integer>\",\n  \"clientRef\": \"<string>\",\n  \"async\": \"<boolean>\",\n  \"test\": \"<boolean>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"currency\": \"string\",\n  \"amountSent\": 5883.800371806481,\n  \"price\": 498.1184162112928,\n  \"queued\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c808db55-8f7c-4830-8262-7376fe09e6b2",
+              "name": "Problem with the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topup",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"maxAmount\": \"<integer>\",\n  \"desiredAmount\": \"<integer>\",\n  \"clientRef\": \"<string>\",\n  \"async\": \"<boolean>\",\n  \"test\": \"<boolean>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "856d98ce-3e60-4844-bcaa-6fb1d1d78818",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topup",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"maxAmount\": \"<integer>\",\n  \"desiredAmount\": \"<integer>\",\n  \"clientRef\": \"<string>\",\n  \"async\": \"<boolean>\",\n  \"test\": \"<boolean>\",\n  \"contactId\": \"<integer>\",\n  \"fullPhoneNumber\": \"631234567890\",\n  \"phoneNumber\": \"1234567890\",\n  \"phoneNumberCountry\": \"PH\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1a1b650d-ba27-4976-ad03-ed223cb23977",
+          "name": "List Top-Ups for an organization",
+          "request": {
+            "name": "List Top-Ups for an organization",
+            "description": {
+              "content": "List Top-Ups.\nThe number of results per API call is limited; see \"nextPage\" and \"after\" to get more results.\n\nSorted by newest first.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "topups",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<string>",
+                  "description": "See \"nextPage\" in the response."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results per API call."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<string>",
+                  "description": "Show this page. Starts at 1!"
+                },
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<string>",
+                  "description": "Used when ?page is set. The default and the maximum is 1000."
+                },
+                {
+                  "disabled": false,
+                  "key": "failed",
+                  "value": "all",
+                  "description": "Limit to/exclude failed Top-Ups."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Keyword search in the contact fields."
+                },
+                {
+                  "disabled": false,
+                  "key": "startDate",
+                  "value": "<dateTime>",
+                  "description": "Create time of the Top-Up must be >= this timestamp."
+                },
+                {
+                  "disabled": false,
+                  "key": "endDate",
+                  "value": "<dateTime>",
+                  "description": "Create time of the Top-Up must be < this timestamp."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "85eb5046-fc28-47b6-9312-b17fb39b365c",
+              "name": "OK. Here are your top-ups.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topups",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "failed",
+                      "value": "all"
+                    },
+                    {
+                      "key": "search",
+                      "value": "Sue"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "2020-02-20T20:20:20Z"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "2020-02-20T20:20:20Z"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"topups\": [\n    {\n      \"id\": \"string\",\n      \"done\": false,\n      \"success\": false,\n      \"error\": \"string\",\n      \"clientRef\": \"string\",\n      \"topupCurrency\": \"string\",\n      \"topupReceived\": 9654.859282769317,\n      \"priceCharged\": 7240.06211011419,\n      \"firstName\": \"string\",\n      \"lastName\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"done\": false,\n      \"success\": false,\n      \"error\": \"string\",\n      \"clientRef\": \"string\",\n      \"topupCurrency\": \"string\",\n      \"topupReceived\": 885.8916715622911,\n      \"priceCharged\": 8260.521435559926,\n      \"firstName\": \"string\",\n      \"lastName\": \"string\"\n    }\n  ],\n  \"paged\": true,\n  \"hasNextPage\": false,\n  \"nextPage\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9679ce34-435b-472b-8035-4a53c950cd66",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topups",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "failed",
+                      "value": "all"
+                    },
+                    {
+                      "key": "search",
+                      "value": "Sue"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "2020-02-20T20:20:20Z"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "2020-02-20T20:20:20Z"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4e98d0d2-93bf-4228-a262-248d33a23ebe",
+          "name": "Get a single Top-Up by ID",
+          "request": {
+            "name": "Get a single Top-Up by ID",
+            "description": {
+              "content": "Load a Top-Up previously created.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations",
+                ":orgId",
+                "topups",
+                ":topupId",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "orgId",
+                  "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "topupId",
+                  "description": "(Required) ID of the Top-Up."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "da93ecb1-adab-4542-b820-0d42a024a7ec",
+              "name": "OK. We have the Top-Up.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topups",
+                    ":topupId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "topupId",
+                      "description": "(Required) ID of the Top-Up."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"done\": false,\n  \"success\": false,\n  \"error\": \"string\",\n  \"clientRef\": \"string\",\n  \"topupCurrency\": \"string\",\n  \"topupReceived\": 1353.796214455233,\n  \"priceCharged\": 6824.138258608281,\n  \"firstName\": \"string\",\n  \"lastName\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2698c414-192b-4e1b-b3dd-9e14f3d92a2b",
+              "name": "No permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topups",
+                    ":topupId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "topupId",
+                      "description": "(Required) ID of the Top-Up."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Invalid Token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d4bb70d1-77e5-42ca-9c07-b2d2e5b8c13b",
+              "name": "Not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations",
+                    ":orgId",
+                    "topups",
+                    ":topupId",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "orgId",
+                      "description": "(Required) engageSPARK ID of the organization.\nYou can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "topupId",
+                      "description": "(Required) ID of the Top-Up."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.engagespark.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "e7eff2f9-2bfe-4dc1-bf03-e8c5f9b2ae26",
+    "name": "engageSPARK Balance Top-Up API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API documentation for [engageSPARK](https://www.engagespark.com/).\n\nTo use this API you need an \"Access token\", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header \"Authorization\" with the value \"Token\" followed by your token. For example: \"Authorization: Token aaa111bbb222ccc333\", NOT \"Authorization: aaa111bbb222ccc333\".\n\nPlease see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.",
+      "type": "text/plain"
+    }
+  }
+}
