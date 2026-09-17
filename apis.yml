@@ -220,16 +220,16 @@ apis:
     url: lifecycle/engagespark-lifecycle.yml
   - type: Webhooks
     url: asyncapi/engagespark-webhooks.yml
-- aid: engagespark:engagespark-whatsapp-api
-  name: engageSPARK WhatsApp API
-  description: The WhatsApp API from engageSPARK — 3 operation(s) for whatsapp.
+- aid: engagespark:engagespark-whats-app-api
+  name: engageSPARK Whats App API
+  description: The Whats App API from engageSPARK — 3 operation(s) for whats app.
   humanURL: https://openapi.engagespark.com/
   baseURL: https://api.engagespark.com
   tags:
-  - WhatsApp
+  - Whats App
   properties:
   - type: OpenAPI
-    url: openapi/engagespark-whatsapp-api-openapi.yml
+    url: openapi/engagespark-whats-app-api-openapi.yml
   - type: Authentication
     url: authentication/engagespark-authentication.yml
   - type: ErrorCatalog
