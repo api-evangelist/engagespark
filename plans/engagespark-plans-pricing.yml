@@ -1,0 +1,74 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://www.engagespark.com/pricing/
+sources:
+- https://www.engagespark.com/pricing/
+provenance:
+  tool: planning/api-economics/harvest_pricing.py
+  run: 20260920T120546
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: usage-other
+published: true
+note: Usage pricing page; subscription plan prices are on a separate page ('Choose a subscription plan
+  here'). All prices stated to include telco fees.
+plan_count: 10
+currency: USD
+plans:
+- name: Send a Text Message (engageSPARK Global Network)
+  price_text: From $ 0.02 / SMS
+  price: 0.02
+  currency: USD
+  period: per-use
+  unit: SMS
+- name: Receive a Text Message
+  price_text: $ 0.02 / SMS + $ 19.99 / MONTH
+  currency: USD
+  period: per-use
+  unit: SMS + monthly fee
+  overage: $ 5.00 setup fee (one time)
+- name: Send a WhatsApp Marketing Message
+  price_text: $ 0.017 + 0.000 / MESSAGE
+  currency: USD
+  period: per-use
+  unit: message
+- name: Send a WhatsApp Utility Message
+  price_text: $ 0.017 + 0.000 / MESSAGE
+  currency: USD
+  period: per-use
+  unit: message
+- name: Receive a WhatsApp Message
+  price_text: $ 0.017 / MESSAGE
+  price: 0.017
+  currency: USD
+  period: per-use
+  unit: message
+- name: Send a Voice Call
+  price_text: From $ 0.000 / MINUTE
+  price: 0
+  currency: USD
+  period: per-use
+  unit: minute
+- name: Receive a Voice Call
+  price_text: $ 0.005 / MINUTE + $ 1.00 / MONTH
+  currency: USD
+  period: per-use
+  unit: minute + monthly fee
+  overage: $ 75.00 setup fee (one time)
+- name: Receive a Missed Call
+  price_text: $ 0.005 / CALL + $ 5.000 / MONTH
+  currency: USD
+  period: per-use
+  unit: call + monthly fee
+  overage: $ 5.000 setup fee (one time)
+- name: SMS Virtual Phone Number
+  price_text: $ 0.005 / SETUP + $ 1.00 / MONTH
+  currency: USD
+  period: month
+  unit: phone number
+- name: Voice Virtual Phone Number
+  price_text: $ 0.005 / SETUP + $ 1.00 / MONTH
+  currency: USD
+  period: month
+  unit: phone number
