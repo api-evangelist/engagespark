@@ -2,16 +2,16 @@
 kin_checks:
   slug: engagespark
   schema_version: 0.22.0
-  scored_at: '2026-09-19'
-  run_ts: 2026-09-19T193153
+  scored_at: '2026-09-21'
+  run_ts: 2026-09-21T233935
   note: Actionable checks (missed + partial) in `checks`, plus the ids that did not
     apply in `na`. Everything else in rubric/scoring-0.22.0.yml was earned; counts
     below let you verify that.
   counts:
     total: 136
-    earned: 35
+    earned: 37
     partial: 14
-    missed: 66
+    missed: 64
     na: 21
   checks:
   - id: multiple_apis
@@ -99,10 +99,6 @@ kin_checks:
   - id: blog_present
     status: missed
     detail: pointer liveness 0.0
-  - id: plans_present
-    status: missed
-  - id: plans_multiple
-    status: missed
   - id: pricing_link
     status: missed
     detail: pointer liveness 0.0
