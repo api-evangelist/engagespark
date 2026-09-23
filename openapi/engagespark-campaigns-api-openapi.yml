@@ -1,19 +1,19 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: engageSPARK Balance Campaigns API
+  title: engageSPARK Campaigns API
   version: 1.0.0
   license:
     name: MIT
     identifier: MIT
     url: https://spdx.org/licenses/MIT.html
   termsOfService: https://www.engagespark.com/terms-of-service/
-  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+  description: 'API documentation for engageSPARK.
 
 
-    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+    To use this API you need an "Access token", which can be retrieved from your User profile. In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
 
 
-    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+    Please see the documentation for other integration methods such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
 servers:
 - url: https://api.engagespark.com
 security:
@@ -163,7 +163,42 @@ paths:
         '500':
           $ref: '#/components/responses/error_500'
 components:
+  parameters:
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+    param_campaignid:
+      name: campaignId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the campaign.
+
+        You can find this ID when editing your campaign, or copy it in the actions drop down in the campaigns list.'
   schemas:
+    properties_daysofweek:
+      properties:
+        monday:
+          type: boolean
+        tuesday:
+          type: boolean
+        wednesday:
+          type: boolean
+        thursday:
+          type: boolean
+        friday:
+          type: boolean
+        saturday:
+          type: boolean
+        sunday:
+          type: boolean
     properties_contact:
       properties:
         firstName:
@@ -279,42 +314,9 @@ components:
           - previous
           - initial
           description: Relative to what message in the campaign.
-    properties_daysofweek:
-      properties:
-        monday:
-          type: boolean
-        tuesday:
-          type: boolean
-        wednesday:
-          type: boolean
-        thursday:
-          type: boolean
-        friday:
-          type: boolean
-        saturday:
-          type: boolean
-        sunday:
-          type: boolean
-  parameters:
-    param_campaignid:
-      name: campaignId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the campaign.
-
-        You can find this ID when editing your campaign, or copy it in the actions drop down in the campaigns list.'
-    param_orgid:
-      name: orgId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the organization.
-
-        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
   responses:
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
     error_401:
       description: No permission.
       content:
@@ -347,8 +349,6 @@ components:
               context:
                 type: object
                 description: Optional error fields specific for the errorCode.
-    error_500:
-      description: Internal server error, something went wrong on the server side. Please contact support.
   securitySchemes:
     apiToken:
       bearerFormat: token

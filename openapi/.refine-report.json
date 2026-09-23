@@ -1,13 +1,7 @@
 {
   "provider": "engagespark",
   "sources": [
-    "engagespark-balance-api-openapi.yml",
-    "engagespark-campaigns-api-openapi.yml",
-    "engagespark-contacts-api-openapi.yml",
-    "engagespark-files-api-openapi.yml",
-    "engagespark-sms-api-openapi.yml",
-    "engagespark-top-up-api-openapi.yml",
-    "engagespark-whatsapp-api-openapi.yml"
+    "_original/engagespark-openapi-original.yml"
   ],
   "outputs": [
     "engagespark-balance-api-openapi.yml",
@@ -18,9 +12,31 @@
     "engagespark-top-up-api-openapi.yml",
     "engagespark-whatsapp-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "engagespark-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "engagespark-openapi-original.yml: declared missing tag: Balance",
+    "engagespark-openapi-original.yml: declared missing tag: Campaigns",
+    "engagespark-openapi-original.yml: declared missing tag: Contacts",
+    "engagespark-openapi-original.yml: declared missing tag: Files",
+    "engagespark-openapi-original.yml: declared missing tag: SMS",
+    "engagespark-openapi-original.yml: declared missing tag: Top-Up",
+    "engagespark-openapi-original.yml: declared missing tag: WhatsApp",
+    "superseded outputs removed: engagespark-whats-app-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 7 total)"
+  ],
+  "skipped": [
+    "engagespark-balance-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "engagespark-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "engagespark-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "engagespark-files-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "engagespark-sms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "engagespark-top-up-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "engagespark-whats-app-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

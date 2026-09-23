@@ -1,19 +1,19 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: engageSPARK Balance SMS API
+  title: engageSPARK SMS API
   version: 1.0.0
   license:
     name: MIT
     identifier: MIT
     url: https://spdx.org/licenses/MIT.html
   termsOfService: https://www.engagespark.com/terms-of-service/
-  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+  description: 'API documentation for engageSPARK.
 
 
-    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+    To use this API you need an "Access token", which can be retrieved from your User profile. In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
 
 
-    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+    Please see the documentation for other integration methods such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
 servers:
 - url: https://api.engagespark.com
 security:
@@ -374,28 +374,6 @@ components:
 
         You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
   responses:
-    error_402:
-      description: Insufficient funds. Please add funds to your organization's balance and repeat the request.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error message.
-                example: insufficient funds
-    error_401:
-      description: No permission.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error message explaining why access is denied.
-                example: Invalid Token
     error_400:
       description: Problem with the request.
       content:
@@ -417,6 +395,17 @@ components:
               context:
                 type: object
                 description: Optional error fields specific for the errorCode.
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
     error_404:
       description: Not found.
       content:
@@ -428,77 +417,18 @@ components:
                 type: string
                 description: Not found.
                 example: Not found
+    error_402:
+      description: Insufficient funds. Please add funds to your organization's balance and repeat the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message.
+                example: insufficient funds
   schemas:
-    schema_sms:
-      type: object
-      required:
-      - messageId
-      - estimateParts
-      - estimateMicro
-      - estimate
-      - deliveryDeadline
-      - to
-      - message
-      - contactId
-      - clientDedup
-      - clientPushURL
-      - clientRef
-      - error
-      - dedupMessageId
-      properties:
-        messageId:
-          type: string
-          description: engageSPARK message ID. Will be unique.
-          example: SMS20240325T122739-500492-1545
-        dedupMessageId:
-          type: string
-          description: The message ID of the original message with the same clientDedup. Only present in error responses when clientDedup conflicts.
-          example: SMS20240325T122739-500492-1545
-        estimateParts:
-          type: integer
-          description: Number of SMSs used to send the message (estimate).
-          example: 2
-        estimateMicro:
-          type: integer
-          description: Price per part, in millionths of a dollar.
-          example: 20000
-        estimate:
-          type: string
-          description: Total estimated cost, in USD, rounded down to cents.
-          example: '0.02'
-        deliveryDeadline:
-          type: string
-          format: date-time
-          description: If there are problems with the telco we'll try to deliver the message until this timestamp.
-          example: '2024-03-26T12:35:15.530548089Z'
-        to:
-          type: string
-          description: Full phone number of the recipient. Including country code, no leading "+".
-          example: '631234567890'
-        message:
-          type: string
-          description: The message as we send it.
-        clientDedup:
-          type: string
-          description: Echo of the "clientDedup" field we received in the request.
-        clientPushURL:
-          type: string
-          description: Echo of the "clientPushURL" field we received in the request.
-        clientRef:
-          type: string
-          description: Echo of the "clientRef" field we received in the request.
-        contactId:
-          type: integer
-          description: ID of the contact.
-          example: 12345
-        error:
-          type: string
-          description: Error message, if any.
-          example: duplicate clientDedup
-        errorCode:
-          type: string
-          description: Error code, if any.
-          example: sms.clientdedup
     schema_model_sms:
       type: object
       properties:
@@ -630,6 +560,76 @@ components:
           type: string
           description: The charged price in USD as string. Has 2 digits, but 6 if there charge uses amounts smaller than cents.
           example: '0.40'
+    schema_sms:
+      type: object
+      required:
+      - messageId
+      - estimateParts
+      - estimateMicro
+      - estimate
+      - deliveryDeadline
+      - to
+      - message
+      - contactId
+      - clientDedup
+      - clientPushURL
+      - clientRef
+      - error
+      - dedupMessageId
+      properties:
+        messageId:
+          type: string
+          description: engageSPARK message ID. Will be unique.
+          example: SMS20240325T122739-500492-1545
+        dedupMessageId:
+          type: string
+          description: The message ID of the original message with the same clientDedup. Only present in error responses when clientDedup conflicts.
+          example: SMS20240325T122739-500492-1545
+        estimateParts:
+          type: integer
+          description: Number of SMSs used to send the message (estimate).
+          example: 2
+        estimateMicro:
+          type: integer
+          description: Price per part, in millionths of a dollar.
+          example: 20000
+        estimate:
+          type: string
+          description: Total estimated cost, in USD, rounded down to cents.
+          example: '0.02'
+        deliveryDeadline:
+          type: string
+          format: date-time
+          description: If there are problems with the telco we'll try to deliver the message until this timestamp.
+          example: '2024-03-26T12:35:15.530548089Z'
+        to:
+          type: string
+          description: Full phone number of the recipient. Including country code, no leading "+".
+          example: '631234567890'
+        message:
+          type: string
+          description: The message as we send it.
+        clientDedup:
+          type: string
+          description: Echo of the "clientDedup" field we received in the request.
+        clientPushURL:
+          type: string
+          description: Echo of the "clientPushURL" field we received in the request.
+        clientRef:
+          type: string
+          description: Echo of the "clientRef" field we received in the request.
+        contactId:
+          type: integer
+          description: ID of the contact.
+          example: 12345
+        error:
+          type: string
+          description: Error message, if any.
+          example: duplicate clientDedup
+        errorCode:
+          type: string
+          description: Error code, if any.
+          example: sms.clientdedup
   securitySchemes:
     apiToken:
       bearerFormat: token

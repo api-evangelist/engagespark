@@ -1,19 +1,19 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: engageSPARK Balance Contacts API
+  title: engageSPARK Contacts API
   version: 1.0.0
   license:
     name: MIT
     identifier: MIT
     url: https://spdx.org/licenses/MIT.html
   termsOfService: https://www.engagespark.com/terms-of-service/
-  description: 'API documentation for [engageSPARK](https://www.engagespark.com/).
+  description: 'API documentation for engageSPARK.
 
 
-    To use this API you need an "Access token", which can be retrieved from your [User profile](https://app.engagespark.com/profile/api-tokens). In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
+    To use this API you need an "Access token", which can be retrieved from your User profile. In the API calls you need to set the header "Authorization" with the value "Token" followed by your token. For example: "Authorization: Token aaa111bbb222ccc333", NOT "Authorization: aaa111bbb222ccc333".
 
 
-    Please see the [documentation for other integration methods](https://www.engagespark.com/support/how-can-i-use-your-api/) such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
+    Please see the documentation for other integration methods such as inbound SMS rules, Zapier zaps, or Make API Request actions.'
 servers:
 - url: https://api.engagespark.com
 security:
@@ -24,7 +24,29 @@ paths:
   /v1/organizations/{orgId}/contacts/:
     get:
       summary: List all contacts for an organization
-      description: "List all contacts for an organization, with optional filtering and pagination.\n\nYou can filter contacts by:\n  - Search terms (searches names and phone numbers)\n  - Group membership\n  - Full phone number\n  - Local phone number + Country\n  - Custom conditions\n  - Subscription status\n  - No-autodelete setting\n  - WhatsApp Business User ID set\n\n\nUse the `subscriptionstatus` parameter to include subscription status information for a specific campaign. Use the `subscriptionfilter` parameter to filter by subscription status."
+      description: 'List all contacts for an organization, with optional filtering and pagination.
+
+
+        You can filter contacts by:
+
+        - Search terms (searches names and phone numbers)
+
+        - Group membership
+
+        - Full phone number
+
+        - Local phone number + Country
+
+        - Custom conditions
+
+        - Subscription status
+
+        - No-autodelete setting
+
+        - WhatsApp Business User ID set
+
+
+        Use the `subscriptionstatus` parameter to include subscription status information for a specific campaign. Use the `subscriptionfilter` parameter to filter by subscription status.'
       operationId: listContacts
       tags:
       - Contacts
@@ -374,7 +396,42 @@ paths:
         '500':
           $ref: '#/components/responses/error_500'
 components:
+  parameters:
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+    query_size:
+      name: size
+      in: query
+      schema:
+        type: integer
+      description: The requested number of items on a page.
+      example: 10
+    query_page:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: The page number to retrieve.
+      example: 2
+    contactid:
+      name: contactId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the contact.
+
+        You get this ID when creating a contact.'
   responses:
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
     error_401:
       description: No permission.
       content:
@@ -386,8 +443,17 @@ components:
                 type: string
                 description: Error message explaining why access is denied.
                 example: Invalid Token
-    error_500:
-      description: Internal server error, something went wrong on the server side. Please contact support.
+    error_404:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Not found.
+                example: Not found
     error_400:
       description: Problem with the request.
       content:
@@ -409,51 +475,51 @@ components:
               context:
                 type: object
                 description: Optional error fields specific for the errorCode.
-    error_404:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Not found.
-                example: Not found
-  parameters:
-    contactid:
-      name: contactId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the contact.
-
-        You get this ID when creating a contact.'
-    query_size:
-      name: size
-      in: query
-      schema:
-        type: integer
-      description: The requested number of items on a page.
-      example: 10
-    param_orgid:
-      name: orgId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the organization.
-
-        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
-    query_page:
-      name: page
-      in: query
-      schema:
-        type: integer
-      description: The page number to retrieve.
-      example: 2
   schemas:
+    schema_substatus:
+      type: object
+      description: Status of a subscription for a contact.
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of subscriptions for this contact.
+          example: 3
+        inProgressCount:
+          type: integer
+          description: Number of subscriptions currently in progress.
+          example: 1
+        doneCount:
+          type: integer
+          description: Number of subscriptions that have completed.
+          example: 2
+        unsubbedCount:
+          type: integer
+          description: Number of subscriptions that have been unsubscribed
+          example: 0
+        errorCount:
+          type: integer
+          description: Number of subscriptions that encountered errors.
+          example: 0
+        withFailuresCount:
+          type: integer
+          description: Number of subscriptions that had failures.
+          example: 0
+        activeId:
+          type: integer
+          description: ID of the active subscription, if any.
+          example: 12345
+        lastId:
+          type: integer
+          description: ID of the last subscription processed.
+          example: 12345
+      required:
+      - totalCount
+      - inProgressCount
+      - doneCount
+      - unsubbedCount
+      - errorCount
+      - withFailuresCount
+      - activeId
     schema_contact:
       type: object
       properties:
@@ -526,50 +592,6 @@ components:
           example: false
         subscription:
           $ref: '#/components/schemas/schema_substatus'
-    schema_substatus:
-      type: object
-      description: Status of a subscription for a contact.
-      properties:
-        totalCount:
-          type: integer
-          description: Total number of subscriptions for this contact.
-          example: 3
-        inProgressCount:
-          type: integer
-          description: Number of subscriptions currently in progress.
-          example: 1
-        doneCount:
-          type: integer
-          description: Number of subscriptions that have completed.
-          example: 2
-        unsubbedCount:
-          type: integer
-          description: Number of subscriptions that have been unsubscribed
-          example: 0
-        errorCount:
-          type: integer
-          description: Number of subscriptions that encountered errors.
-          example: 0
-        withFailuresCount:
-          type: integer
-          description: Number of subscriptions that had failures.
-          example: 0
-        activeId:
-          type: integer
-          description: ID of the active subscription, if any.
-          example: 12345
-        lastId:
-          type: integer
-          description: ID of the last subscription processed.
-          example: 12345
-      required:
-      - totalCount
-      - inProgressCount
-      - doneCount
-      - unsubbedCount
-      - errorCount
-      - withFailuresCount
-      - activeId
   securitySchemes:
     apiToken:
       bearerFormat: token
