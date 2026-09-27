@@ -254,6 +254,19 @@ paths:
           $ref: '#/components/responses/error_500'
 components:
   responses:
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
     error_400:
       description: Problem with the request.
       content:
@@ -275,19 +288,6 @@ components:
               context:
                 type: object
                 description: Optional error fields specific for the errorCode.
-    error_500:
-      description: Internal server error, something went wrong on the server side. Please contact support.
-    error_401:
-      description: No permission.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error message explaining why access is denied.
-                example: Invalid Token
     error_404:
       description: Not found.
       content:
@@ -299,6 +299,24 @@ components:
                 type: string
                 description: Not found.
                 example: Not found
+  parameters:
+    param_filename:
+      name: filename
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The name and extension of the file.
+      example: report_01.xlsx
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
   schemas:
     schema_file:
       type: object
@@ -345,24 +363,6 @@ components:
           type: boolean
           description: We automatically generate a thumbnail for the file if the file is a video file and set this property to true, which is available as /thumb/<filename>.
           example: false
-  parameters:
-    param_orgid:
-      name: orgId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the organization.
-
-        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
-    param_filename:
-      name: filename
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The name and extension of the file.
-      example: report_01.xlsx
   securitySchemes:
     apiToken:
       bearerFormat: token

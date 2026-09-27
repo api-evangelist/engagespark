@@ -290,28 +290,29 @@ paths:
           description: No such Top-Up.
           $ref: '#/components/responses/error_404'
 components:
-  parameters:
-    page:
-      name: page
-      in: query
-      schema:
-        type: string
-      description: Show this page. Starts at 1!
-    size:
-      name: size
-      in: query
-      schema:
-        type: string
-      description: Used when ?page is set. The default and the maximum is 1000.
-    param_orgid:
-      name: orgId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the organization.
-
-        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+  responses:
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_404:
+      description: Not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Not found.
+                example: Not found
   schemas:
     schema_topup:
       type: object
@@ -346,29 +347,28 @@ components:
         lastName:
           type: string
           description: If the user has a contact in the engageSPARK system, this is the last name of that contact.
-  responses:
-    error_401:
-      description: No permission.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error message explaining why access is denied.
-                example: Invalid Token
-    error_404:
-      description: Not found.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Not found.
-                example: Not found
+  parameters:
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
+    size:
+      name: size
+      in: query
+      schema:
+        type: string
+      description: Used when ?page is set. The default and the maximum is 1000.
+    page:
+      name: page
+      in: query
+      schema:
+        type: string
+      description: Show this page. Starts at 1!
   securitySchemes:
     apiToken:
       bearerFormat: token
