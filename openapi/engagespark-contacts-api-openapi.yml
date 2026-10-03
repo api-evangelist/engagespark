@@ -397,50 +397,6 @@ paths:
           $ref: '#/components/responses/error_500'
 components:
   schemas:
-    schema_substatus:
-      type: object
-      description: Status of a subscription for a contact.
-      properties:
-        totalCount:
-          type: integer
-          description: Total number of subscriptions for this contact.
-          example: 3
-        inProgressCount:
-          type: integer
-          description: Number of subscriptions currently in progress.
-          example: 1
-        doneCount:
-          type: integer
-          description: Number of subscriptions that have completed.
-          example: 2
-        unsubbedCount:
-          type: integer
-          description: Number of subscriptions that have been unsubscribed
-          example: 0
-        errorCount:
-          type: integer
-          description: Number of subscriptions that encountered errors.
-          example: 0
-        withFailuresCount:
-          type: integer
-          description: Number of subscriptions that had failures.
-          example: 0
-        activeId:
-          type: integer
-          description: ID of the active subscription, if any.
-          example: 12345
-        lastId:
-          type: integer
-          description: ID of the last subscription processed.
-          example: 12345
-      required:
-      - totalCount
-      - inProgressCount
-      - doneCount
-      - unsubbedCount
-      - errorCount
-      - withFailuresCount
-      - activeId
     schema_contact:
       type: object
       properties:
@@ -513,7 +469,60 @@ components:
           example: false
         subscription:
           $ref: '#/components/schemas/schema_substatus'
+    schema_substatus:
+      type: object
+      description: Status of a subscription for a contact.
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of subscriptions for this contact.
+          example: 3
+        inProgressCount:
+          type: integer
+          description: Number of subscriptions currently in progress.
+          example: 1
+        doneCount:
+          type: integer
+          description: Number of subscriptions that have completed.
+          example: 2
+        unsubbedCount:
+          type: integer
+          description: Number of subscriptions that have been unsubscribed
+          example: 0
+        errorCount:
+          type: integer
+          description: Number of subscriptions that encountered errors.
+          example: 0
+        withFailuresCount:
+          type: integer
+          description: Number of subscriptions that had failures.
+          example: 0
+        activeId:
+          type: integer
+          description: ID of the active subscription, if any.
+          example: 12345
+        lastId:
+          type: integer
+          description: ID of the last subscription processed.
+          example: 12345
+      required:
+      - totalCount
+      - inProgressCount
+      - doneCount
+      - unsubbedCount
+      - errorCount
+      - withFailuresCount
+      - activeId
   parameters:
+    contactid:
+      name: contactId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the contact.
+
+        You get this ID when creating a contact.'
     query_size:
       name: size
       in: query
@@ -537,27 +546,9 @@ components:
       description: 'engageSPARK ID of the organization.
 
         You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
-    contactid:
-      name: contactId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the contact.
-
-        You get this ID when creating a contact.'
   responses:
-    error_401:
-      description: No permission.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error message explaining why access is denied.
-                example: Invalid Token
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
     error_400:
       description: Problem with the request.
       content:
@@ -579,8 +570,6 @@ components:
               context:
                 type: object
                 description: Optional error fields specific for the errorCode.
-    error_500:
-      description: Internal server error, something went wrong on the server side. Please contact support.
     error_404:
       description: Not found.
       content:
@@ -592,6 +581,17 @@ components:
                 type: string
                 description: Not found.
                 example: Not found
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
   securitySchemes:
     apiToken:
       bearerFormat: token

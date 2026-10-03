@@ -429,9 +429,31 @@ components:
           type: integer
           description: The charged price in micro USD in total. In case of refunds this can be 0.
           example: 40000
+  parameters:
+    size:
+      name: size
+      in: query
+      schema:
+        type: string
+      description: Used when ?page is set. The default and the maximum is 1000.
+    page:
+      name: page
+      in: query
+      schema:
+        type: string
+      description: Show this page. Starts at 1!
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
   responses:
-    error_401:
-      description: No permission.
+    error_402:
+      description: Insufficient funds. Please add funds to your organization's balance and repeat the request.
       content:
         application/json:
           schema:
@@ -439,8 +461,8 @@ components:
             properties:
               error:
                 type: string
-                description: Error message explaining why access is denied.
-                example: Invalid Token
+                description: Error message.
+                example: insufficient funds
     error_400:
       description: Problem with the request.
       content:
@@ -473,8 +495,8 @@ components:
                 type: string
                 description: Not found.
                 example: Not found
-    error_402:
-      description: Insufficient funds. Please add funds to your organization's balance and repeat the request.
+    error_401:
+      description: No permission.
       content:
         application/json:
           schema:
@@ -482,30 +504,8 @@ components:
             properties:
               error:
                 type: string
-                description: Error message.
-                example: insufficient funds
-  parameters:
-    param_orgid:
-      name: orgId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the organization.
-
-        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
-    size:
-      name: size
-      in: query
-      schema:
-        type: string
-      description: Used when ?page is set. The default and the maximum is 1000.
-    page:
-      name: page
-      in: query
-      schema:
-        type: string
-      description: Show this page. Starts at 1!
+                description: Error message explaining why access is denied.
+                example: Invalid Token
   securitySchemes:
     apiToken:
       bearerFormat: token
