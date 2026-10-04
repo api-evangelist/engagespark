@@ -163,6 +163,41 @@ paths:
         '500':
           $ref: '#/components/responses/error_500'
 components:
+  responses:
+    error_500:
+      description: Internal server error, something went wrong on the server side. Please contact support.
+    error_401:
+      description: No permission.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: Error message explaining why access is denied.
+                example: Invalid Token
+    error_400:
+      description: Problem with the request.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - error
+            - errorCode
+            properties:
+              error:
+                type: string
+                description: English description of the error. Might change over time.
+                example: Too many failed login attempts
+              errorCode:
+                type: string
+                description: Code specific for the error.
+                example: login.locked
+              context:
+                type: object
+                description: Optional error fields specific for the errorCode.
   schemas:
     properties_contact:
       properties:
@@ -212,22 +247,6 @@ components:
             color: blue
             produce: soy beans
             beneficiary ID: ''
-    properties_daysofweek:
-      properties:
-        monday:
-          type: boolean
-        tuesday:
-          type: boolean
-        wednesday:
-          type: boolean
-        thursday:
-          type: boolean
-        friday:
-          type: boolean
-        saturday:
-          type: boolean
-        sunday:
-          type: boolean
     schema_sub_delay:
       type: object
       description: 'Delays the start of the subscription. If omitted, the subscriptions start immediately.
@@ -295,51 +314,23 @@ components:
           - previous
           - initial
           description: Relative to what message in the campaign.
-  responses:
-    error_500:
-      description: Internal server error, something went wrong on the server side. Please contact support.
-    error_400:
-      description: Problem with the request.
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - error
-            - errorCode
-            properties:
-              error:
-                type: string
-                description: English description of the error. Might change over time.
-                example: Too many failed login attempts
-              errorCode:
-                type: string
-                description: Code specific for the error.
-                example: login.locked
-              context:
-                type: object
-                description: Optional error fields specific for the errorCode.
-    error_401:
-      description: No permission.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: Error message explaining why access is denied.
-                example: Invalid Token
+    properties_daysofweek:
+      properties:
+        monday:
+          type: boolean
+        tuesday:
+          type: boolean
+        wednesday:
+          type: boolean
+        thursday:
+          type: boolean
+        friday:
+          type: boolean
+        saturday:
+          type: boolean
+        sunday:
+          type: boolean
   parameters:
-    param_orgid:
-      name: orgId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'engageSPARK ID of the organization.
-
-        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
     param_campaignid:
       name: campaignId
       in: path
@@ -349,6 +340,15 @@ components:
       description: 'engageSPARK ID of the campaign.
 
         You can find this ID when editing your campaign, or copy it in the actions drop down in the campaigns list.'
+    param_orgid:
+      name: orgId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'engageSPARK ID of the organization.
+
+        You can find this ID in your [Organization Profile](https://app.engagespark.com/organization/info).'
   securitySchemes:
     apiToken:
       bearerFormat: token
