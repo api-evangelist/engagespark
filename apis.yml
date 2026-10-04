@@ -200,6 +200,8 @@ apis:
   humanURL: https://openapi.engagespark.com/
   baseURL: https://api.engagespark.com
   tags:
+  - Top Up
+  tags_raw:
   - Top-Up
   properties:
   - type: OpenAPI
@@ -226,6 +228,8 @@ apis:
   humanURL: https://openapi.engagespark.com/
   baseURL: https://api.engagespark.com
   tags:
+  - WhatsApp
+  tags_raw:
   - Whats App
   properties:
   - type: OpenAPI
