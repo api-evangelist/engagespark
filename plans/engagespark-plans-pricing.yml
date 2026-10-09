@@ -76,3 +76,94 @@ plans:
   currency: USD
   period: month
   unit: phone number
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - metered
+  units:
+  - compute
+  - message
+  - request
+  plans:
+  - name: Send a Text Message (engageSPARK Global Network)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - message
+    periods:
+    - other
+  - name: Receive a Text Message
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - message
+    periods:
+    - other
+  - name: Send a WhatsApp Marketing Message
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - message
+    periods:
+    - other
+  - name: Send a WhatsApp Utility Message
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - message
+    periods:
+    - other
+  - name: Receive a WhatsApp Message
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - message
+    periods:
+    - other
+  - name: Send a Voice Call
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Receive a Voice Call
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Receive a Missed Call
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - request
+    periods:
+    - other
+  - name: SMS Virtual Phone Number
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Voice Virtual Phone Number
+    access: other
+    model: unstated
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
